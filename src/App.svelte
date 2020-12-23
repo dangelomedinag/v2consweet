@@ -34,10 +34,10 @@
 			"https://sapper-heroku-test.herokuapp.com/api/productos.json"
 		);
 		let product = await promise.json();
-		setTimeout(() => {
-			return product;
-		}, 3000);
-		// return product;
+		// setTimeout(() => {
+		// 	return product;
+		// }, 3000);
+		return product;
 	}
 	// const promise = fetch(
 	// 	"https://sapper-heroku-test.herokuapp.com/api/productos.json"
@@ -46,22 +46,56 @@
 </script>
 
 <style>
+	@keyframes load {
+		from {
+			transform: translate(-100%);
+		}
+		to {
+			transform: translate(200%);
+		}
+	}
+
+	.placeholder-item {
+		height: 70%;
+		width: 50%;
+		/* box-shadow: 0 4px 10px 0 rgba(33, 33, 33, 0.15); */
+		border-radius: 4px;
+		position: relative;
+		overflow: hidden;
+		background: #ffffff;
+	}
+
+	.placeholder-loading::before {
+		content: "";
+		display: block;
+		position: absolute;
+		top: 0;
+		height: 100%;
+		width: 150px;
+		background: linear-gradient(
+			to right,
+			transparent 0%,
+			#e8e8e8 50%,
+			transparent 100%
+		);
+		transform: translate(-100%);
+		animation: load 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+	}
+
 	.wrapper {
 		display: inline-flex;
 		width: 250px;
 		height: 300px;
-		background: white;
 		margin: 0;
+		margin-right: 1em;
 		position: relative;
 		overflow: hidden;
 		border-radius: 10px 10px 10px 10px;
-		box-shadow: 0;
 		transform: scale(0.95);
-		transition: box-shadow 0.5s, transform 0.5s;
+		transition: transform 0.5s;
 	}
 	.wrapper:hover {
 		transform: scale(1);
-		box-shadow: 5px 20px 30px rgba(0, 0, 0, 0.2);
 	}
 	.wrapper .container {
 		width: 100%;
@@ -70,116 +104,63 @@
 	.wrapper .container .top {
 		height: 80%;
 		width: 100%;
-		background: url(https://s-media-cache-ak0.pinimg.com/736x/49/80/6f/49806f3f1c7483093855ebca1b8ae2c4.jpg)
+		/* background: url(https://s-media-cache-ak0.pinimg.com/736x/49/80/6f/49806f3f1c7483093855ebca1b8ae2c4.jpg)
 			no-repeat center center;
 		-webkit-background-size: 100%;
 		-moz-background-size: 100%;
 		-o-background-size: 100%;
-		background-size: 100%;
+		background-size: 100%; */
 	}
 	.wrapper .container .bottom {
-		width: 200%;
+		background: #f4f4f4;
+		width: 100%;
 		height: 20%;
+		display: flex;
 		transition: transform 0.5s;
 	}
-	.wrapper .container .bottom.clicked {
-		transform: translateX(-50%);
-	}
 	.wrapper .container .bottom h1 {
-		font-size: 1.3em;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		margin: 0;
+		color: rgb(128, 128, 128);
+		font-size: 1em;
 		margin: 0;
 		padding: 0;
 	}
 	.wrapper .container .bottom p {
+		color: rgb(128, 128, 128);
 		margin: 0;
 		padding: 0;
-	}
-	.wrapper .container .bottom .left {
 		height: 100%;
-		width: 50%;
-		background: #f4f4f4;
-		position: relative;
-		float: left;
+		width: 100%;
 	}
-	.wrapper .container .bottom .left .details {
-		padding: 0 20px;
-		float: left;
-		width: 70%;
-		height: 100%;
+	.wrapper .container .bottom .details {
+		padding: 0 1em;
+		margin: auto 0;
+		width: 75%;
 	}
-	.wrapper .container .bottom .left .buy {
-		float: right;
-		width: calc(30% - 2px);
-		height: 100%;
+	.wrapper .container .bottom .buy {
+		text-align: center;
+		width: 25%;
+		margin: auto 0;
 		background: #f1f1f1;
 		transition: background 0.5s;
 		border-left: solid thin rgba(0, 0, 0, 0.1);
+		cursor: pointer;
 	}
-	.wrapper .container .bottom .left .buy i {
+	.wrapper .container .bottom .buy i {
 		font-size: 30px;
-		/* padding: 30px; */
 		color: #254053;
 		transition: transform 0.5s;
 	}
-	.wrapper .container .bottom .left .buy:hover {
-		background: #a6cdde;
+	.wrapper .container .bottom .buy:hover i {
+		color: #f36566;
 	}
-	.wrapper .container .bottom .left .buy:hover i {
-		transform: translateY(5px);
-		color: #00394b;
-	}
-	.wrapper .container .bottom .right {
-		width: 250px;
-		background: #a6cdde;
-		color: white;
-		float: right;
-		height: 300px;
-		overflow: hidden;
-	}
-	.wrapper .container .bottom .right .details {
-		/* padding: 20px; */
-		float: right;
-		width: 70%;
-	}
-	.wrapper .container .bottom .right .done {
-		width: calc(30% - 2px);
-		float: left;
-		transition: transform 0.5s;
-		border-right: solid thin rgba(255, 255, 255, 0.3);
-		height: 50%;
-	}
-	.wrapper .container .bottom .right .done i {
-		font-size: 30px;
-		/* padding: 30px; */
-		color: white;
-	}
-	.wrapper .container .bottom .right .remove {
-		width: calc(30% - 1px);
-		clear: both;
-		border-right: solid thin rgba(255, 255, 255, 0.3);
-		height: 50%;
-		background: #bc3b59;
-		transition: transform 0.5s, background 0.5s;
-	}
-	.wrapper .container .bottom .right .remove:hover {
-		background: #9b2847;
-	}
-	.wrapper .container .bottom .right .remove:hover i {
-		transform: translateY(5px);
-	}
-	.wrapper .container .bottom .right .remove i {
-		transition: transform 0.5s;
-		font-size: 30px;
-		padding: 30px;
-		color: white;
-	}
-	.wrapper .container .bottom .right:hover .remove,
-	.wrapper .container .bottom .right:hover .done {
-		transform: translateY(-100%);
-	}
+
 	.wrapper .inside {
 		z-index: 9;
-		background: #92879b;
+		background: #f36566;
 		width: 140px;
 		height: 140px;
 		position: absolute;
@@ -191,8 +172,8 @@
 	}
 	.wrapper .inside .icon {
 		position: absolute;
-		right: 85px;
-		top: 85px;
+		right: 60px;
+		top: 50px;
 		color: white;
 		opacity: 1;
 	}
@@ -302,7 +283,7 @@
 	div.parent {
 		position: relative;
 		margin: 1em 0;
-		cursor: grab;
+		/* cursor: grab; */
 	}
 	div.parent::after {
 		content: "";
@@ -320,6 +301,7 @@
 		white-space: nowrap;
 		min-width: 100%;
 		padding: 1em 5em 1em 0;
+		scroll-behavior: smooth;
 	}
 	section.pipe::-webkit-scrollbar {
 		width: 100%;
@@ -445,11 +427,7 @@
 </style>
 
 <div class="container">
-	<header>
-		<button>aaa</button>
-		<img src="consweet-logo-web.svg" alt="icon-logo" />
-		<button>bbb</button>
-	</header>
+	<header><img src="consweet-logo-web.svg" alt="icon-logo" /></header>
 </div>
 
 <div class="container-full main">
@@ -478,154 +456,19 @@
 					<div class="parent">
 						<section bind:this={pipe} class="pipe">
 							{#await getProducts()}
-								<!-- <article>
-									<header>
-										<h4>Titulo</h4>
-									</header>
-									<main />
-									<footer><span>1800</span> <button>ver</button></footer>
-								</article> -->
 								<div class="wrapper">
-									<div class="container">
+									<div class="container placeholder-item placeholder-loading">
 										<div class="top" />
 										<div class="bottom">
-											<div class="left">
-												<div class="details">
-													<h1>Chair</h1>
-													<p>£250</p>
-												</div>
-												<div class="buy">
-													<i class="material-icons">add_shopping_cart</i>
-												</div>
-											</div>
-											<div class="right">
-												<div class="done">
-													<i class="material-icons">done</i>
-												</div>
-												<div class="details">
-													<h1>Chair</h1>
-													<p>Added to your cart</p>
-												</div>
-												<div class="remove">
-													<i class="material-icons">clear</i>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="inside">
-										<div class="icon">
-											<i class="material-icons">info_outline</i>
-										</div>
-										<div class="contents">
-											<table>
-												<tr>
-													<th>Width</th>
-													<th>Height</th>
-												</tr>
-												<tr>
-													<td>3000mm</td>
-													<td>4000mm</td>
-												</tr>
-												<tr>
-													<th>Something</th>
-													<th>Something</th>
-												</tr>
-												<tr>
-													<td>200mm</td>
-													<td>200mm</td>
-												</tr>
-												<tr>
-													<th>Something</th>
-													<th>Something</th>
-												</tr>
-												<tr>
-													<td>200mm</td>
-													<td>200mm</td>
-												</tr>
-												<tr>
-													<th>Something</th>
-													<th>Something</th>
-												</tr>
-												<tr>
-													<td>200mm</td>
-													<td>200mm</td>
-												</tr>
-											</table>
-										</div>
-									</div>
-								</div>
-								<div class="wrapper">
-									<div class="container">
-										<div class="top" />
-										<div class="bottom">
-											<div class="left">
-												<div class="details">
-													<h1>Chair</h1>
-													<p>£250</p>
-												</div>
-												<div class="buy">
-													<i class="material-icons">add_shopping_cart</i>
-												</div>
-											</div>
-											<div class="right">
-												<div class="done">
-													<i class="material-icons">done</i>
-												</div>
-												<div class="details">
-													<h1>Chair</h1>
-													<p>Added to your cart</p>
-												</div>
-												<div class="remove">
-													<i class="material-icons">clear</i>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="inside">
-										<div class="icon">
-											<i class="material-icons">info_outline</i>
-										</div>
-										<div class="contents">
-											<table>
-												<tr>
-													<th>Width</th>
-													<th>Height</th>
-												</tr>
-												<tr>
-													<td>3000mm</td>
-													<td>4000mm</td>
-												</tr>
-												<tr>
-													<th>Something</th>
-													<th>Something</th>
-												</tr>
-												<tr>
-													<td>200mm</td>
-													<td>200mm</td>
-												</tr>
-												<tr>
-													<th>Something</th>
-													<th>Something</th>
-												</tr>
-												<tr>
-													<td>200mm</td>
-													<td>200mm</td>
-												</tr>
-												<tr>
-													<th>Something</th>
-													<th>Something</th>
-												</tr>
-												<tr>
-													<td>200mm</td>
-													<td>200mm</td>
-												</tr>
-											</table>
+											<div
+												class="details placeholder-item placeholder-loading" />
+											<div class="buy placeholder-item placeholder-loading" />
 										</div>
 									</div>
 								</div>
 							{:then product}
 								{#each product as item}
-									<article
+									<!-- <article
 										style="background: url('{item.imgs[0]}') no-repeat center center; background-size: cover;">
 										<header>
 											<h4>{item.nombre}</h4>
@@ -635,7 +478,64 @@
 											<span>{item.precio}</span>
 											<button>ver</button>
 										</footer>
-									</article>
+									</article> -->
+									<div class="wrapper">
+										<div class="container">
+											<div
+												class="top"
+												style="background: url('{item.imgs[0]}') no-repeat center center; background-size: cover;" />
+											<div class="bottom">
+												<div class="details">
+													<h1>{item.nombre}</h1>
+													<p>{item.precio}</p>
+												</div>
+												<div class="buy">
+													<i class="material-icons">add_shopping_cart</i>
+												</div>
+											</div>
+										</div>
+										<div class="inside">
+											<div class="icon">
+												<i class="material-icons">info_outline</i>
+											</div>
+											<div class="contents">
+												<table>
+													<tr>
+														<th>Width</th>
+														<th>Height</th>
+													</tr>
+													<tr>
+														<td>3000mm</td>
+														<td>4000mm</td>
+													</tr>
+													<tr>
+														<th>Something</th>
+														<th>Something</th>
+													</tr>
+													<tr>
+														<td>200mm</td>
+														<td>200mm</td>
+													</tr>
+													<tr>
+														<th>Something</th>
+														<th>Something</th>
+													</tr>
+													<tr>
+														<td>200mm</td>
+														<td>200mm</td>
+													</tr>
+													<tr>
+														<th>Something</th>
+														<th>Something</th>
+													</tr>
+													<tr>
+														<td>200mm</td>
+														<td>200mm</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+									</div>
 								{/each}
 							{/await}
 
