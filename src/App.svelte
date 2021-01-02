@@ -1,235 +1,155 @@
 <script>
-	let pipe;
+	import { onMount } from "svelte";
+	import Section from "./components/Section.svelte";
+	import ScrollWrapper from "./components/Scroll-wrapper.svelte";
+	import SectionLinks from "./components/Section-links.svelte";
+	import SubSection from "./components/Sub-section.svelte";
+	import { flip } from "svelte/animate";
+	import { fly, scale, fade, slide } from "svelte/transition";
+	import { quintInOut } from "svelte/easing";
+	import CardProduct from "./components/Card-product.svelte";
+	import ItemProduct from "./components/Item-product.svelte";
+	import AnimationWrapper from "./components/Animation-wrapper.svelte";
+	import Breadcrumb from "./components/Breadcrumb.svelte";
 
-	function scrolling() {
-		const elementWith = pipe.scrollWidth - pipe.clientWidth;
+	const app = {
+		ready: (callback) => {
+			// In case the document is already rendered
+			if (document.readyState != "loading") callback();
+			else document.addEventListener("DOMContentLoaded", callback);
+		},
+		menu: {},
+		levels: { register: [] },
+		search: {},
+		keys: {},
+		overlay: {},
+		animations: { tracked: [] },
+	};
 
-		if (pipe.scrollLeft >= elementWith) {
-			pipe.scroll({
-				top: 0,
+	let levels = ["home"];
+	let y = [];
+	let products = [];
+	let product = {};
+	let categories = [];
+	$: empty = products.length <= 0 && categories.length <= 0;
+
+	app.ready(async () => {
+		const promise = await fetch(
+			"https://sapper-heroku-test.herokuapp.com/api/productos.json"
+		);
+		const promiseCategories = await fetch(
+			"https://sapper-heroku-test.herokuapp.com/api/categorias.json"
+		);
+		products = await promise.json();
+		categories = await promiseCategories.json();
+	});
+
+	// onMount(async () => {
+	// 	const promise = await fetch(
+	// 		"https://sapper-heroku-test.herokuapp.com/api/productos.json"
+	// 	);
+	// 	const promiseCategories = await fetch(
+	// 		"https://sapper-heroku-test.herokuapp.com/api/categorias.json"
+	// 	);
+	// 	products = await promise.json();
+	// 	categories = await promiseCategories.json();
+	// });
+
+	let subMode = false;
+	let listMode = false;
+	let itemMode = false;
+	let sectionScrollY = {
+		home: 0,
+		list: 0,
+	};
+
+	function showList() {
+		if (!itemMode) sectionScrollY.home = y;
+		// console.log("sectionScrollY: ", sectionScrollY, "y: ", y);
+		subMode = true;
+		if (itemMode) itemMode = !itemMode;
+		listMode = !listMode;
+
+		window.scrollTo({
+			top: sectionScrollY.list,
+			left: 0,
+			behavior: "smooth",
+		});
+	}
+	function showItem(productItem) {
+		sectionScrollY.list = y;
+		if (listMode) listMode = !listMode;
+		window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+		product = productItem;
+		itemMode = true;
+
+		if (subMode) {
+			return;
+		} else {
+			subMode = true;
+		}
+	}
+
+	function clickCardHandler(e) {
+		console.log(e.detail.product);
+
+		console.log("sectionScrollY: ", sectionScrollY, "y: ", y);
+		showItem(e.detail.product);
+	}
+
+	function retunMode() {
+		if (listMode) listMode = false;
+		if (itemMode) itemMode = false;
+		if (subMode) subMode = false;
+
+		setTimeout(() => {
+			window.scrollTo({
+				top: sectionScrollY.home,
 				left: 0,
 				behavior: "smooth",
 			});
 
-			return;
-		}
-
-		pipe.scroll({
-			top: 0,
-			left: pipe.scrollLeft + 266,
-			behavior: "smooth",
-		});
-
-		// pipe.scrollLeft += 266;
+			sectionScrollY.home = 0;
+			sectionScrollY.list = 0;
+		}, 1000);
 	}
 
-	function eventScroll(event) {
-		const elementWith = pipe.scrollWidth - pipe.clientWidth;
+	function nextProduct() {
+		let current = products.indexOf(product);
+		console.log(current);
 
-		// console.log(event.target);
+		if (current == products.length - 1) product = products[1];
+		else product = products[current + 1];
 	}
 
-	async function getProducts() {
-		const promise = await fetch(
-			"https://sapper-heroku-test.herokuapp.com/api/productos.json"
-		);
-		let product = await promise.json();
-		// setTimeout(() => {
-		// 	return product;
-		// }, 3000);
-		return product;
+	function prevProduct() {
+		let current = products.indexOf(product);
+		console.log(current);
+
+		if (current == 1) product = products[products.length - 1];
+		else product = products[current - 1];
 	}
-	// const promise = fetch(
-	// 	"https://sapper-heroku-test.herokuapp.com/api/productos.json"
-	// ).then((res) => res);
-	// let resolve = promise.json();
 </script>
 
 <style>
-	@keyframes load {
-		from {
-			transform: translate(-100%);
-		}
-		to {
-			transform: translate(200%);
-		}
-	}
-
-	.placeholder-item {
-		height: 70%;
-		width: 50%;
-		/* box-shadow: 0 4px 10px 0 rgba(33, 33, 33, 0.15); */
-		border-radius: 4px;
-		position: relative;
-		overflow: hidden;
-		background: #ffffff;
-	}
-
-	.placeholder-loading::before {
-		content: "";
-		display: block;
-		position: absolute;
-		top: 0;
-		height: 100%;
-		width: 150px;
-		background: linear-gradient(
-			to right,
-			transparent 0%,
-			#e8e8e8 50%,
-			transparent 100%
-		);
-		transform: translate(-100%);
-		animation: load 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-	}
-
-	.wrapper {
-		display: inline-flex;
-		width: 250px;
-		height: 300px;
-		margin: 0;
-		margin-right: 1em;
-		position: relative;
-		overflow: hidden;
-		border-radius: 10px 10px 10px 10px;
-		transform: scale(0.95);
-		transition: transform 0.5s;
-	}
-	.wrapper:hover {
-		transform: scale(1);
-	}
-	.wrapper .container {
-		width: 100%;
-		height: 100%;
-	}
-	.wrapper .container .top {
-		height: 80%;
-		width: 100%;
-		/* background: url(https://s-media-cache-ak0.pinimg.com/736x/49/80/6f/49806f3f1c7483093855ebca1b8ae2c4.jpg)
-			no-repeat center center;
-		-webkit-background-size: 100%;
-		-moz-background-size: 100%;
-		-o-background-size: 100%;
-		background-size: 100%; */
-	}
-	.wrapper .container .bottom {
-		background: #f4f4f4;
-		width: 100%;
-		height: 20%;
-		display: flex;
-		transition: transform 0.5s;
-	}
-	.wrapper .container .bottom h1 {
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		margin: 0;
-		color: rgb(128, 128, 128);
-		font-size: 1em;
-		margin: 0;
-		padding: 0;
-	}
-	.wrapper .container .bottom p {
-		color: rgb(128, 128, 128);
-		margin: 0;
-		padding: 0;
-		height: 100%;
-		width: 100%;
-	}
-	.wrapper .container .bottom .details {
-		padding: 0 1em;
-		margin: auto 0;
-		width: 75%;
-	}
-	.wrapper .container .bottom .buy {
-		text-align: center;
-		width: 25%;
-		margin: auto 0;
-		background: #f1f1f1;
-		transition: background 0.5s;
-		border-left: solid thin rgba(0, 0, 0, 0.1);
-		cursor: pointer;
-	}
-	.wrapper .container .bottom .buy i {
-		font-size: 30px;
-		color: #254053;
-		transition: transform 0.5s;
-	}
-	.wrapper .container .bottom .buy:hover i {
-		color: #f36566;
-	}
-
-	.wrapper .inside {
-		z-index: 9;
-		background: #f36566;
-		width: 140px;
-		height: 140px;
-		position: absolute;
-		top: -70px;
-		right: -70px;
-		border-radius: 0px 0px 200px 200px;
-		transition: all 0.5s, border-radius 2s, top 1s;
-		overflow: hidden;
-	}
-	.wrapper .inside .icon {
-		position: absolute;
-		right: 60px;
-		top: 50px;
-		color: white;
-		opacity: 1;
-	}
-	.wrapper .inside:hover {
-		width: 100%;
-		right: 0;
-		top: 0;
-		border-radius: 0;
-		height: 80%;
-	}
-	.wrapper .inside:hover .icon {
-		opacity: 0;
-		right: 15px;
-		top: 15px;
-	}
-	.wrapper .inside:hover .contents {
-		opacity: 1;
-		transform: scale(1);
-		transform: translateY(0);
-	}
-	.wrapper .inside .contents {
-		padding: 5%;
-		opacity: 0;
-		transform: scale(0.5);
-		transform: translateY(-200%);
-		transition: opacity 0.2s, transform 0.8s;
-	}
-	.wrapper .inside .contents table {
-		text-align: left;
-		width: 100%;
-	}
-	.wrapper .inside .contents h1,
-	.wrapper .inside .contents p,
-	.wrapper .inside .contents table {
-		color: white;
-	}
-	.wrapper .inside .contents p {
-		font-size: 13px;
-	}
-
 	/* primary: #f36566 */
 	/* secondary: #2a221d */
+
 	.main {
-		background-color: #2a221d;
+		background-color: var(--secondary);
 		border-top-left-radius: 1.5em;
 		border-top-right-radius: 1.5em;
+		overflow: hidden;
+		position: relative;
 	}
 	.split {
+		/* --color-opacity: 0.2; */
 		/* width: 80%; */
 		height: 1px;
-		background-color: rgba(243, 101, 101, 0.2);
+		background-color: var(--primary-opacity-3);
 		border: none;
 	}
-	section.list {
-		padding: 1em 2em;
-	}
+
 	h1 {
 		/* reset */
 		margin: 0;
@@ -239,21 +159,9 @@
 		font-size: 3em;
 	}
 	p {
-		color: #d8d8d8;
+		color: var(--neutral);
 	}
-	a.enlaces {
-		/* reset */
-		/* display: block; */
-		display: inline-flex;
-		justify-content: center;
-		align-items: center;
-		color: #d8d8d8;
-		border: 1px solid #d8d8d8;
-		padding: 1em;
-	}
-	a.enlaces:hover {
-		background-color: #f36262;
-	}
+
 	svg {
 		width: 1em;
 		height: 1em;
@@ -265,323 +173,154 @@
 		height: auto;
 		padding: 2em 0;
 	}
+	header {
+		/* padding: 1em; */
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 80px;
+	}
 	img {
-		width: 3em;
-		height: auto;
+		width: auto;
+		height: 3em;
 		display: block;
 		margin: 0 auto;
 	}
-	header {
-		padding: 1em;
+	.separator {
+		margin: 0 1em;
+	}
+	.wrapper-breadcrumb {
+		padding: 1.5em 2em;
 		display: flex;
+		justify-content: flex-start;
+		align-items: center;
 	}
-	/* button {
-		background-color: #d8d8d8;
-		border: 1px solid #f36262;
-		color: #f36262;
-	} */
-	div.parent {
-		position: relative;
-		margin: 1em 0;
-		/* cursor: grab; */
-	}
-	div.parent::after {
-		content: "";
-		position: absolute;
-		top: 0;
-		right: 0;
-		height: 100%;
-		width: 90%;
-		background: linear-gradient(90deg, #2a221d00 30%, #2a221d 100%);
-		pointer-events: none;
-	}
-	section.pipe {
-		overflow-y: hidden;
-		overflow-x: scroll;
-		white-space: nowrap;
-		min-width: 100%;
-		padding: 1em 5em 1em 0;
-		scroll-behavior: smooth;
-	}
-	section.pipe::-webkit-scrollbar {
-		width: 100%;
-		height: 5px;
-		background-color: white;
-		margin-top: 1em;
-	}
-	section.pipe::-webkit-scrollbar {
-		height: 5px;
-	}
-	/* Track */
-	section.pipe::-webkit-scrollbar-track {
-		background: #2a221d;
-	}
-	/* Handle */
-	section.pipe::-webkit-scrollbar-thumb {
-		border-radius: 10px;
-		background: #f36262;
-	}
-	/* Handle on hover */
-	section.pipe::-webkit-scrollbar-thumb:hover {
-		background: #e98585;
-	}
-	/* section.pipe {
-		height: 100%;
-		background-color: aquamarine;
-		border: 1px solid #f36262;
-		margin: 0 0 0 2em;
-	} */
-	article {
-		display: inline-flex;
-		flex-direction: column;
-		justify-content: space-between;
-		flex-wrap: nowrap;
-		border-radius: 10px;
-		height: 100%;
-		/* border: 2px solid #f36262; */
-		border: 2px solid white;
-		background-color: #d8d8d8;
-		width: 250px;
-		height: 300px;
-		margin-right: 1em;
-		/* padding: 1em; */
-		box-shadow: 0;
-		transition: box-shadow 0.5s, transform 0.5s;
-		transform: scale(0.96);
-		/* color: #2a221d; */
-		color: #ffffff;
+	.breadcrumb {
 		font-weight: 700;
-		overflow: hidden;
-	}
-	article:hover {
-		box-shadow: 5px 20px 30px rgba(0, 0, 0, 0.2);
-		transform: scale(1);
-	}
-
-	article > header,
-	article > footer {
-		width: 100%;
-		max-width: 100%;
-		/* background-color: rgba(0, 0, 0, 0.6); */
-		/* background-color: #ffffff; */
-		background-color: #2a221d;
-		margin: 0;
-		padding: 0 1em;
-	}
-
-	article > main {
-		width: 100%;
-		max-width: 100%;
-		/* background-color: rgba(255, 255, 255, 0.4); */
-		margin: 0;
-		padding: 0;
-		height: 100%;
-	}
-
-	article h4 {
-		margin: 0;
+		cursor: pointer;
+		width: 120px;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
+	.breadcrumb:hover,
+	.breadcrumb.active {
+		color: var(--primary);
+	}
 
-	article > footer {
-		display: inline-flex;
-		justify-content: space-between;
+	.breadcrumb.home {
+		width: auto;
+		overflow: initial;
+		text-overflow: initial;
+	}
+
+	.grid-products {
+		padding: 1em;
+		display: flex;
+		justify-content: center;
 		align-items: center;
+		flex-direction: row;
+		flex-wrap: wrap;
+		overflow: hidden;
 	}
 
-	article span {
-		font-size: 1.2em;
-		font-weight: 700;
+	@media (min-width: 640px) {
+		.breadcrumb {
+			width: auto;
+		}
 	}
 
-	article button {
-		margin: 0;
+	@media (min-width: 768px) {
 	}
-	button.next {
-		outline: none;
-		position: absolute;
-		z-index: 100;
-		right: 0;
-		top: 50%;
-		width: 4em;
-		height: 4em;
-		/* padding: 1em; */
-		background-color: white;
-		color: #000;
-		transform: translate(0%, -50%);
-		margin: 0;
-		border-radius: 100px;
-		cursor: pointer;
+
+	@media (min-width: 1024px) {
 	}
-	button.next:hover {
-		background-color: rgb(223, 223, 223);
-	}
-	button.next > svg {
-		fill: #f36262;
-	}
-	button.next.reverse > svg {
-		transform: rotate(180deg);
+
+	@media (min-width: 1280px) {
 	}
 </style>
 
+<svelte:window bind:scrollY={y} />
+
 <div class="container">
-	<header><img src="consweet-logo-web.svg" alt="icon-logo" /></header>
+	<header>
+		<img
+			src="consweet-logo-web.svg"
+			alt="icon-logo"
+			on:click={() => (products = [...products.slice(1)])} />
+	</header>
 </div>
 
 <div class="container-full main">
 	<div class="container">
-		{#each ['Productos', 'Contacto', 'Acerca de...'] as i, index}
-			<section class="list">
-				<svg class="icon" viewBox="0 0 20 20">
+		{#if subMode}
+			<AnimationWrapper duration={1200}>
+				<div class="wrapper-breadcrumb">
+					<span class="breadcrumb home"><i
+							on:click={retunMode}
+							class="material-icons">home</i></span>
+					<span class="separator">&gt;</span>
+					{#if itemMode}
+						<span class="breadcrumb" on:click={showList}>lista de productos</span>
+						<span class="separator">&gt;</span>
+						<span class="breadcrumb active">{product?.nombre}</span>
+					{:else}<span class="breadcrumb">lista de productos</span>{/if}
+				</div>
+			</AnimationWrapper>
+			<Breadcrumb />
+			<SubSection>
+				{#if listMode}
+					<!-- grid list products -->
+					<div class="grid-products">
+						{#each products as item (item.id)}
+							<CardProduct product={item} on:clickCard={clickCardHandler} />
+						{/each}
+					</div>
+					<!-- grid list products end -->
+				{:else if itemMode}
+					<!-- single product item -->
+
+					<ItemProduct {product} />
+
+					<button on:click={nextProduct}>++</button>
+					<button on:click={prevProduct}>--</button>
+
+					<!-- single product item end -->
+				{/if}
+			</SubSection>
+		{:else}
+			<Section>
+				<AnimationWrapper x={200} out_x={200} y={0} out_y={0}>
+					<ScrollWrapper {products} on:clickCard={clickCardHandler} />
+				</AnimationWrapper>
+
+				<!-- Sections links -->
+				<div class="links">
+					{#if !empty}
+						{#each categories as categorie}
+							<SectionLinks>{categorie.nombre}</SectionLinks>
+						{/each}
+						<div>
+							<SectionLinks main={true} on:click={showList}>
+								Mostrar todos
+							</SectionLinks>
+						</div>
+					{/if}
+				</div>
+			</Section>
+			<hr class="split" />
+
+			<Section>
+				<!-- <svg class="icon" viewBox="0 0 20 20">
 					<path
 						fill="current"
-						d="M7.228,11.464H1.996c-0.723,0-1.308,0.587-1.308,1.309v5.232c0,0.722,0.585,1.308,1.308,1.308h5.232
-					c0.723,0,1.308-0.586,1.308-1.308v-5.232C8.536,12.051,7.95,11.464,7.228,11.464z M7.228,17.351c0,0.361-0.293,0.654-0.654,0.654
-					H2.649c-0.361,0-0.654-0.293-0.654-0.654v-3.924c0-0.361,0.292-0.654,0.654-0.654h3.924c0.361,0,0.654,0.293,0.654,0.654V17.351z
-						M17.692,11.464H12.46c-0.723,0-1.308,0.587-1.308,1.309v5.232c0,0.722,0.585,1.308,1.308,1.308h5.232
-					c0.722,0,1.308-0.586,1.308-1.308v-5.232C19,12.051,18.414,11.464,17.692,11.464z M17.692,17.351c0,0.361-0.293,0.654-0.654,0.654
-					h-3.924c-0.361,0-0.654-0.293-0.654-0.654v-3.924c0-0.361,0.293-0.654,0.654-0.654h3.924c0.361,0,0.654,0.293,0.654,0.654V17.351z
-						M7.228,1H1.996C1.273,1,0.688,1.585,0.688,2.308V7.54c0,0.723,0.585,1.308,1.308,1.308h5.232c0.723,0,1.308-0.585,1.308-1.308
-					V2.308C8.536,1.585,7.95,1,7.228,1z M7.228,6.886c0,0.361-0.293,0.654-0.654,0.654H2.649c-0.361,0-0.654-0.292-0.654-0.654V2.962
-					c0-0.361,0.292-0.654,0.654-0.654h3.924c0.361,0,0.654,0.292,0.654,0.654V6.886z M17.692,1H12.46c-0.723,0-1.308,0.585-1.308,1.308
-					V7.54c0,0.723,0.585,1.308,1.308,1.308h5.232C18.414,8.848,19,8.263,19,7.54V2.308C19,1.585,18.414,1,17.692,1z M17.692,6.886
-					c0,0.361-0.293,0.654-0.654,0.654h-3.924c-0.361,0-0.654-0.292-0.654-0.654V2.962c0-0.361,0.293-0.654,0.654-0.654h3.924
-					c0.361,0,0.654,0.292,0.654,0.654V6.886z" />
-				</svg>
-				<h1>{i}</h1>
-				<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit.</p>
-				{#if index == 0}
-					<div class="parent">
-						<section bind:this={pipe} class="pipe">
-							{#await getProducts()}
-								<div class="wrapper">
-									<div class="container placeholder-item placeholder-loading">
-										<div class="top" />
-										<div class="bottom">
-											<div
-												class="details placeholder-item placeholder-loading" />
-											<div class="buy placeholder-item placeholder-loading" />
-										</div>
-									</div>
-								</div>
-							{:then product}
-								{#each product as item}
-									<!-- <article
-										style="background: url('{item.imgs[0]}') no-repeat center center; background-size: cover;">
-										<header>
-											<h4>{item.nombre}</h4>
-										</header>
-										<main />
-										<footer>
-											<span>{item.precio}</span>
-											<button>ver</button>
-										</footer>
-									</article> -->
-									<div class="wrapper">
-										<div class="container">
-											<div
-												class="top"
-												style="background: url('{item.imgs[0]}') no-repeat center center; background-size: cover;" />
-											<div class="bottom">
-												<div class="details">
-													<h1>{item.nombre}</h1>
-													<p>{item.precio}</p>
-												</div>
-												<div class="buy">
-													<i class="material-icons">add_shopping_cart</i>
-												</div>
-											</div>
-										</div>
-										<div class="inside">
-											<div class="icon">
-												<i class="material-icons">info_outline</i>
-											</div>
-											<div class="contents">
-												<table>
-													<tr>
-														<th>Width</th>
-														<th>Height</th>
-													</tr>
-													<tr>
-														<td>3000mm</td>
-														<td>4000mm</td>
-													</tr>
-													<tr>
-														<th>Something</th>
-														<th>Something</th>
-													</tr>
-													<tr>
-														<td>200mm</td>
-														<td>200mm</td>
-													</tr>
-													<tr>
-														<th>Something</th>
-														<th>Something</th>
-													</tr>
-													<tr>
-														<td>200mm</td>
-														<td>200mm</td>
-													</tr>
-													<tr>
-														<th>Something</th>
-														<th>Something</th>
-													</tr>
-													<tr>
-														<td>200mm</td>
-														<td>200mm</td>
-													</tr>
-												</table>
-											</div>
-										</div>
-									</div>
-								{/each}
-							{/await}
+						d="M17.051,3.302H2.949c-0.866,0-1.567,0.702-1.567,1.567v10.184c0,0.865,0.701,1.568,1.567,1.568h14.102c0.865,0,1.566-0.703,1.566-1.568V4.869C18.617,4.003,17.916,3.302,17.051,3.302z M17.834,15.053c0,0.434-0.35,0.783-0.783,0.783H2.949c-0.433,0-0.784-0.35-0.784-0.783V4.869c0-0.433,0.351-0.784,0.784-0.784h14.102c0.434,0,0.783,0.351,0.783,0.784V15.053zM15.877,5.362L10,9.179L4.123,5.362C3.941,5.245,3.699,5.296,3.581,5.477C3.463,5.659,3.515,5.901,3.696,6.019L9.61,9.86C9.732,9.939,9.879,9.935,10,9.874c0.121,0.062,0.268,0.065,0.39-0.014l5.915-3.841c0.18-0.118,0.232-0.36,0.115-0.542C16.301,5.296,16.059,5.245,15.877,5.362z" />
+				</svg> -->
 
-							<button class="next" on:click={scrolling}>
-								<svg class="svg-icon" viewBox="0 0 20 20">
-									<path
-										fill="current"
-										d="M1.729,9.212h14.656l-4.184-4.184c-0.307-0.306-0.307-0.801,0-1.107c0.305-0.306,0.801-0.306,1.106,0
-								l5.481,5.482c0.018,0.014,0.037,0.019,0.053,0.034c0.181,0.181,0.242,0.425,0.209,0.66c-0.004,0.038-0.012,0.071-0.021,0.109
-								c-0.028,0.098-0.075,0.188-0.143,0.271c-0.021,0.026-0.021,0.061-0.045,0.085c-0.015,0.016-0.034,0.02-0.051,0.033l-5.483,5.483
-								c-0.306,0.307-0.802,0.307-1.106,0c-0.307-0.305-0.307-0.801,0-1.105l4.184-4.185H1.729c-0.436,0-0.788-0.353-0.788-0.788
-								S1.293,9.212,1.729,9.212z" />
-								</svg>
-							</button>
-						</section>
-					</div>
-				{/if}
-				<a class="enlaces" href="/">
-					<span style="padding-right: 1em;">más!</span>
-					<svg class="svg-icon" viewBox="0 0 20 20">
-						<path
-							fill="current"
-							d="M1.729,9.212h14.656l-4.184-4.184c-0.307-0.306-0.307-0.801,0-1.107c0.305-0.306,0.801-0.306,1.106,0
-						l5.481,5.482c0.018,0.014,0.037,0.019,0.053,0.034c0.181,0.181,0.242,0.425,0.209,0.66c-0.004,0.038-0.012,0.071-0.021,0.109
-						c-0.028,0.098-0.075,0.188-0.143,0.271c-0.021,0.026-0.021,0.061-0.045,0.085c-0.015,0.016-0.034,0.02-0.051,0.033l-5.483,5.483
-						c-0.306,0.307-0.802,0.307-1.106,0c-0.307-0.305-0.307-0.801,0-1.105l4.184-4.185H1.729c-0.436,0-0.788-0.353-0.788-0.788
-						S1.293,9.212,1.729,9.212z" />
-					</svg>
-				</a>
-				<a class="enlaces" href="/">
-					<span style="padding-right: 1em;">{i}</span>
-					<svg class="svg-icon" viewBox="0 0 20 20">
-						<path
-							fill="current"
-							d="M1.729,9.212h14.656l-4.184-4.184c-0.307-0.306-0.307-0.801,0-1.107c0.305-0.306,0.801-0.306,1.106,0
-						l5.481,5.482c0.018,0.014,0.037,0.019,0.053,0.034c0.181,0.181,0.242,0.425,0.209,0.66c-0.004,0.038-0.012,0.071-0.021,0.109
-						c-0.028,0.098-0.075,0.188-0.143,0.271c-0.021,0.026-0.021,0.061-0.045,0.085c-0.015,0.016-0.034,0.02-0.051,0.033l-5.483,5.483
-						c-0.306,0.307-0.802,0.307-1.106,0c-0.307-0.305-0.307-0.801,0-1.105l4.184-4.185H1.729c-0.436,0-0.788-0.353-0.788-0.788
-						S1.293,9.212,1.729,9.212z" />
-					</svg>
-				</a>
-			</section>
-
-			{#if index < new Array(3).length - 1}
-				<hr class="split" />
-			{/if}
-		{/each}
+				<!-- content -->
+				<p>dasdsadad</p>
+				<button>dsadsa</button>
+			</Section>
+		{/if}
 	</div>
 </div>
