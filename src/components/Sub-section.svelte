@@ -3,17 +3,6 @@
   import { fly, scale } from "svelte/transition";
   import { quintInOut } from "svelte/easing";
   import AnimationWrapper from "./Animation-wrapper.svelte";
-  let h;
-  // export let animations = true;
-  $: console.log(h);
-
-  // let filter;
-  // let curr_filter;
-  // let curr_sort;
-
-  // $: if (filter !== "undefined") {
-  //   curr_filter = filter;
-  // }
 </script>
 
 <style>
@@ -21,7 +10,7 @@
     position: relative;
     width: 100%;
     max-height: 100%;
-    min-height: calc(100vh - calc(80px + 4.5em));
+    min-height: calc(100vh - calc(80px + 70px));
     z-index: 10000;
     background-color: #3d342d;
     border-top-left-radius: 1.5em;
@@ -44,8 +33,6 @@
   @media (min-width: 1280px) {
   }
 </style>
-
-<svelte:window bind:innerHeight={h} />
 
 <AnimationWrapper>
   <div class="wrapper">

@@ -65,7 +65,7 @@
   .badge {
     border-radius: 2em !important;
     font-size: 0.9em;
-    padding: 0;
+    /* padding: 0; */
     padding: 0.5em 1.5em;
     font-weight: 700;
     /* padding: 0.8em; */
@@ -77,6 +77,7 @@
 
   .badge:hover {
     color: white;
+    border-color: var(--primary);
     background-color: rgba(243, 101, 102, 0.2);
   }
   .badge:hover .icon-animated {
@@ -112,8 +113,11 @@
     background-color: transparent;
   }
   .outline:hover {
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    border: 1px solid var(--primary);
     background-color: transparent;
+  }
+  .outline:hover path {
+    /* fill: var(--primary); */
   }
 
   .badge:nth-child(1) {

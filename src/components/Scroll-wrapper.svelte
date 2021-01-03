@@ -1,13 +1,18 @@
 <script>
+  import { onMount } from "svelte";
   import { quintInOut } from "svelte/easing";
   import { scale } from "svelte/transition";
   import AnimationWrapper from "./Animation-wrapper.svelte";
   import CardProduct from "./Card-product.svelte";
 
-  // export let products;
-  export let products = [];
+  export let products;
   $: empty = products.length <= 0;
-  let scroll_container = undefined;
+  let scroll_container;
+  let scrollable;
+
+  onMount(() => {
+    scroll_container = document.querySelector(".wrapper-container");
+  });
 
   function scrolling() {
     /* width card to step scroll ajustment*/
@@ -135,7 +140,7 @@
 </style>
 
 <div class="wrapper">
-  <div bind:this={scroll_container} class="wrapper-container">
+  <div class="wrapper-container">
     {#each products.filter((i) => i.salient) as item (item.id)}
       <CardProduct product={item} on:clickCard />
     {:else}
@@ -144,7 +149,7 @@
 
     {#if !empty}
       <button
-        in:scale={{ duration: 1000, easing: quintInOut, opacity: 0 }}
+        transition:scale={{ duration: 1000, easing: quintInOut, opacity: 0 }}
         class="btn-next"
         on:click={scrolling}>
         <svg class="icon" viewBox="0 0 20 20">

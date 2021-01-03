@@ -11,6 +11,7 @@
 	import ItemProduct from "./components/Item-product.svelte";
 	import AnimationWrapper from "./components/Animation-wrapper.svelte";
 	import Breadcrumb from "./components/Breadcrumb.svelte";
+	import ContactMethods from "./components/Contact-methods.svelte";
 
 	const app = {
 		ready: (callback) => {
@@ -28,12 +29,14 @@
 
 	let levels = ["home"];
 	let y = [];
+	let raw_products = [];
+	let raw_categories = [];
 	let products = [];
-	let product = {};
 	let categories = [];
+	let product = {};
 	$: empty = products.length <= 0 && categories.length <= 0;
 
-	app.ready(async () => {
+	onMount(async () => {
 		const promise = await fetch(
 			"https://sapper-heroku-test.herokuapp.com/api/productos.json"
 		);
@@ -42,92 +45,61 @@
 		);
 		products = await promise.json();
 		categories = await promiseCategories.json();
+		raw_categories = categories;
+		raw_products = products;
 	});
-
-	// onMount(async () => {
-	// 	const promise = await fetch(
-	// 		"https://sapper-heroku-test.herokuapp.com/api/productos.json"
-	// 	);
-	// 	const promiseCategories = await fetch(
-	// 		"https://sapper-heroku-test.herokuapp.com/api/categorias.json"
-	// 	);
-	// 	products = await promise.json();
-	// 	categories = await promiseCategories.json();
-	// });
-
-	let subMode = false;
-	let listMode = false;
-	let itemMode = false;
-	let sectionScrollY = {
-		home: 0,
-		list: 0,
-	};
-
-	function showList() {
-		if (!itemMode) sectionScrollY.home = y;
-		// console.log("sectionScrollY: ", sectionScrollY, "y: ", y);
-		subMode = true;
-		if (itemMode) itemMode = !itemMode;
-		listMode = !listMode;
-
-		window.scrollTo({
-			top: sectionScrollY.list,
-			left: 0,
-			behavior: "smooth",
-		});
-	}
-	function showItem(productItem) {
-		sectionScrollY.list = y;
-		if (listMode) listMode = !listMode;
-		window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-		product = productItem;
-		itemMode = true;
-
-		if (subMode) {
-			return;
-		} else {
-			subMode = true;
-		}
-	}
-
-	function clickCardHandler(e) {
-		console.log(e.detail.product);
-
-		console.log("sectionScrollY: ", sectionScrollY, "y: ", y);
-		showItem(e.detail.product);
-	}
-
-	function retunMode() {
-		if (listMode) listMode = false;
-		if (itemMode) itemMode = false;
-		if (subMode) subMode = false;
-
-		setTimeout(() => {
-			window.scrollTo({
-				top: sectionScrollY.home,
-				left: 0,
-				behavior: "smooth",
-			});
-
-			sectionScrollY.home = 0;
-			sectionScrollY.list = 0;
-		}, 1000);
-	}
 
 	function nextProduct() {
 		let current = products.indexOf(product);
 		console.log(current);
 
-		if (current == products.length - 1) product = products[1];
-		else product = products[current + 1];
+		if (current == products.length - 1) {
+			product = products[1];
+			level3();
+		} else {
+			product = products[current + 1];
+			level3();
+		}
 	}
 
 	function prevProduct() {
 		let current = products.indexOf(product);
 		console.log(current);
 
-		if (current == 1) product = products[products.length - 1];
-		else product = products[current - 1];
+		if (current == 0) {
+			product = products[products.length - 1];
+			level3();
+		} else {
+			product = products[current - 1];
+			level3();
+		}
+	}
+
+	function level1() {
+		products = raw_products;
+		levels = ["home"];
+	}
+	function level2(e, title = "Productos") {
+		levels = ["home", levels[2] ? levels[1] : title];
+		window.scrollTo({
+			top: 0,
+			left: 0,
+			behavior: "smooth",
+		});
+	}
+	function level3(e) {
+		if (e) product = e.detail.product;
+		levels = ["home", levels[1] ? levels[1] : "Productos", product.nombre];
+		window.scrollTo({
+			top: 0,
+			left: 0,
+			behavior: "smooth",
+		});
+	}
+
+	function tagsHandler(id, name) {
+		products = products.filter((p) => p.categoria_id === id);
+		level2(null, `Productos (${name})`);
 	}
 </script>
 
@@ -244,83 +216,71 @@
 
 <div class="container">
 	<header>
-		<img
-			src="consweet-logo-web.svg"
-			alt="icon-logo"
-			on:click={() => (products = [...products.slice(1)])} />
+		<img src="consweet-logo-web.svg" alt="icon-logo" on:click={level1} />
 	</header>
 </div>
 
 <div class="container-full main">
 	<div class="container">
-		{#if subMode}
-			<AnimationWrapper duration={1200}>
-				<div class="wrapper-breadcrumb">
-					<span class="breadcrumb home"><i
-							on:click={retunMode}
-							class="material-icons">home</i></span>
-					<span class="separator">&gt;</span>
-					{#if itemMode}
-						<span class="breadcrumb" on:click={showList}>lista de productos</span>
-						<span class="separator">&gt;</span>
-						<span class="breadcrumb active">{product?.nombre}</span>
-					{:else}<span class="breadcrumb">lista de productos</span>{/if}
-				</div>
-			</AnimationWrapper>
-			<Breadcrumb />
-			<SubSection>
-				{#if listMode}
-					<!-- grid list products -->
-					<div class="grid-products">
-						{#each products as item (item.id)}
-							<CardProduct product={item} on:clickCard={clickCardHandler} />
-						{/each}
-					</div>
-					<!-- grid list products end -->
-				{:else if itemMode}
-					<!-- single product item -->
-
-					<ItemProduct {product} />
-
-					<button on:click={nextProduct}>++</button>
-					<button on:click={prevProduct}>--</button>
-
-					<!-- single product item end -->
-				{/if}
-			</SubSection>
-		{:else}
-			<Section>
-				<AnimationWrapper x={200} out_x={200} y={0} out_y={0}>
-					<ScrollWrapper {products} on:clickCard={clickCardHandler} />
-				</AnimationWrapper>
-
-				<!-- Sections links -->
-				<div class="links">
+		{#if levels.length <= 1}
+			<AnimationWrapper delay={400}>
+				<Section id="section-products">
+					<p />
+					<ScrollWrapper {products} on:clickCard={level3} />
 					{#if !empty}
-						{#each categories as categorie}
-							<SectionLinks>{categorie.nombre}</SectionLinks>
+						{#each categories as { nombre: name, id } (id)}
+							<SectionLinks on:click={tagsHandler(id, name)}>
+								{name}
+							</SectionLinks>
 						{/each}
 						<div>
-							<SectionLinks main={true} on:click={showList}>
-								Mostrar todos
-							</SectionLinks>
+							<SectionLinks main on:click={level2}>Mostrar todos</SectionLinks>
 						</div>
 					{/if}
-				</div>
-			</Section>
-			<hr class="split" />
+				</Section>
+			</AnimationWrapper>
 
-			<Section>
-				<!-- <svg class="icon" viewBox="0 0 20 20">
-					<path
-						fill="current"
-						d="M17.051,3.302H2.949c-0.866,0-1.567,0.702-1.567,1.567v10.184c0,0.865,0.701,1.568,1.567,1.568h14.102c0.865,0,1.566-0.703,1.566-1.568V4.869C18.617,4.003,17.916,3.302,17.051,3.302z M17.834,15.053c0,0.434-0.35,0.783-0.783,0.783H2.949c-0.433,0-0.784-0.35-0.784-0.783V4.869c0-0.433,0.351-0.784,0.784-0.784h14.102c0.434,0,0.783,0.351,0.783,0.784V15.053zM15.877,5.362L10,9.179L4.123,5.362C3.941,5.245,3.699,5.296,3.581,5.477C3.463,5.659,3.515,5.901,3.696,6.019L9.61,9.86C9.732,9.939,9.879,9.935,10,9.874c0.121,0.062,0.268,0.065,0.39-0.014l5.915-3.841c0.18-0.118,0.232-0.36,0.115-0.542C16.301,5.296,16.059,5.245,15.877,5.362z" />
-				</svg> -->
+			<AnimationWrapper delay={200}>
+				<Section id="section-contact">
+					<p>
+						¡Conversemos un poco!🤗. A través de la siguientes vias, podremos
+						ponernos en contacto.
+					</p>
+					<ContactMethods />
+					<SectionLinks main>Déjanos un comemtario</SectionLinks>
+					<SectionLinks main>Por mayor</SectionLinks>
+				</Section>
+			</AnimationWrapper>
 
-				<!-- content -->
-				<p>dasdsadad</p>
-				<button>dsadsa</button>
-			</Section>
+			<AnimationWrapper>
+				<Section id="section-about">
+					<div />
+				</Section>
+			</AnimationWrapper>
+		{:else}
+			<Breadcrumb {levels} on:level1={level1} on:level2={level2} />
+			{#if levels.length == 2}
+				<SubSection>
+					<div class="grid-products">
+						{#each products as item (item.id)}
+							<CardProduct
+								out_fly={{ delay: 0, duration: 600, easing: quintInOut, y: 200, opacity: 0 }}
+								product={item}
+								on:clickCard={level3} />
+						{/each}
+					</div>
+				</SubSection>
+			{:else if levels.length == 3}
+				<SubSection>
+					<ItemProduct {product} />
+					<button
+						on:click={prevProduct}
+						disabled={products.length == 1 || (products.indexOf(product) == 0 && products.length == 2)}>-</button>
+					<button
+						on:click={nextProduct}
+						disabled={products.length == 1 || (products.indexOf(product) == 1 && products.length == 2)}>+</button>
+				</SubSection>
+			{/if}
 		{/if}
 	</div>
 </div>

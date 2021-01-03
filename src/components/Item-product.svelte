@@ -111,7 +111,7 @@
     letter-spacing: 1px;
   }
 
-  .split {
+  .divider {
     /* --color-opacity: 0.2; */
     /* width: 80%; */
     width: 100%;
@@ -160,4 +160,4 @@
     </div>
   </div>
 </div>
-<hr class="split" />
+<hr class="divider" />
