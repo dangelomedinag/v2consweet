@@ -34,7 +34,6 @@
 	};
 
 	let levels = ["home"];
-	let y = [];
 	let raw_products = [];
 	let raw_categories = [];
 	let products = [];
@@ -136,11 +135,6 @@
 		100% {
 			/* transform: translate(50%); */
 		}
-	}
-
-	.bouncy {
-		animation: buttons-action-left 5s infinite linear;
-		position: relative;
 	}
 
 	/* primary: #f36566 */
@@ -256,10 +250,6 @@
 		background-color: var(--neutral-2);
 	}
 
-	.mamamlo {
-		/* position: relative; */
-	}
-
 	@media (min-width: 640px) {
 	}
 
@@ -272,8 +262,6 @@
 	@media (min-width: 1280px) {
 	}
 </style>
-
-<svelte:window bind:scrollY={y} />
 
 <div class="container">
 	<header>

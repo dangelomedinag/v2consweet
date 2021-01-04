@@ -1,7 +1,7 @@
 const sveltePreprocess = require('svelte-preprocess');
 
 module.exports = {
-  preprocess: SveltePreprocess({
+  preprocess: sveltePreprocess({
 		postcss: {
 			plugins: [require("autoprefixer")()]
 		},
@@ -22,5 +22,4 @@ module.exports = {
 			],
 		}
 	})
-  // ...other svelte options
 };

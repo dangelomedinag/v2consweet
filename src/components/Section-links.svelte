@@ -81,6 +81,12 @@
 		border-color: var(--primary);
 		background-color: rgba(243, 101, 102, 0.2);
 	}
+	.icon-animated {
+		display: none;
+		opacity: 0;
+		transform: translateX(-100%);
+		transition: transform 0.6s, opacity 0.6 ease-in;
+	}
 	.badge:hover .icon-animated {
 		display: inline-block;
 		opacity: 1;
@@ -88,7 +94,7 @@
 	}
 
 	.main {
-		color: #f36566;
+		color: var(--primary);
 		padding: 1em 3em;
 		background-color: rgba(243, 101, 102, 0.05);
 		border: none;
@@ -100,7 +106,7 @@
 	}
 
 	.main:hover {
-		background-color: #f36566;
+		background-color: var(--primary);
 		color: white;
 	}
 
@@ -132,13 +138,6 @@
 	}
 	.badge:nth-child(4) {
 		animation-delay: 0.28s;
-	}
-
-	.icon-animated {
-		display: none;
-		opacity: 0;
-		transform: translateX(-100%);
-		transition: transform 0.6s, opacity 0.6 ease-in;
 	}
 
 	@media (min-width: 640px) {
