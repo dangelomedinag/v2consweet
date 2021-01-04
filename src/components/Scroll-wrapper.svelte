@@ -66,7 +66,7 @@
     overflow-x: scroll;
     white-space: nowrap;
     min-width: 100%;
-    padding: 1em 5em 1em 0;
+    padding: 1em 3em 1em 0;
     scroll-behavior: smooth;
   }
   .wrapper-container::-webkit-scrollbar {
@@ -98,8 +98,8 @@
     z-index: 100;
     right: 0;
     top: 50%;
-    width: 4em;
-    height: 4em;
+    width: 3em;
+    height: 3em;
     /* padding: 1em; */
     background-color: white;
     color: #000;
