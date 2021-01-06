@@ -12,6 +12,9 @@
 	import AnimationWrapper from "./components/Animation-wrapper.svelte";
 	import Breadcrumb from "./components/Breadcrumb.svelte";
 	import ContactMethods from "./components/Contact-methods.svelte";
+	import SectionButton from "./components/Section-button.svelte";
+
+	let changed = false;
 	// in { delay: 400, duration: 100, easing: quintOut, x: 400, opacity: 0 }
 	// out { duration: 400, easing: quintIn, x: -400, opacity: 0 }
 	let ItemProductAnim = {
@@ -90,6 +93,14 @@
 		levels = ["home"];
 	}
 	function level2(e, title = "Productos") {
+		let cards = document.querySelectorAll(".card-observer");
+		console.log(cards);
+		const callback = (entries) => {
+			// console.log(entries);
+		};
+		const observer = new IntersectionObserver(callback);
+
+		cards.forEach((item) => observer.observe(item));
 		levels = ["home", levels[2] ? levels[1] : title];
 		window.scrollTo({
 			top: 0,
@@ -302,26 +313,32 @@
 					<ScrollWrapper {products} on:clickCard={level3} />
 					{#if !empty}
 						{#each categories as { nombre: name, id } (id)}
-							<SectionLinks on:click={tagsHandler(id, name)}>
+							<SectionButton on:click={tagsHandler(id, name)}>
 								{name}
-							</SectionLinks>
+							</SectionButton>
 						{/each}
 						<div>
-							<SectionLinks main on:click={level2}>Mostrar todos</SectionLinks>
+							<SectionButton main on:click={level2}>
+								Mostrar todos
+							</SectionButton>
 						</div>
 					{/if}
 				</Section>
 			</AnimationWrapper>
 
-			<Section id="section-contact">
-				<p>
-					¡Conversemos un poco!🤗. A través de la siguientes vias, podremos
-					ponernos en contacto.
-				</p>
-				<ContactMethods />
-				<SectionLinks main>Déjanos un comemtario</SectionLinks>
-				<SectionLinks main>Por mayor</SectionLinks>
-			</Section>
+			<AnimationWrapper>
+				<Section id="section-contact">
+					<p>
+						¡Conversemos un poco!🤗. A través de la siguientes vias, podremos
+						ponernos en contacto.
+					</p>
+					{#if !empty}
+						<ContactMethods />
+					{/if}
+					<SectionButton main>Déjanos un comemtario</SectionButton>
+					<SectionButton main>Por mayor</SectionButton>
+				</Section>
+			</AnimationWrapper>
 
 			<Section id="section-about">
 				<div />

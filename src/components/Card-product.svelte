@@ -1,6 +1,22 @@
 <script>
-	import { createEventDispatcher } from "svelte";
+	import { afterUpdate, createEventDispatcher, onMount } from "svelte";
+	const IntersectionCard = (node) => {
+		// let node = document.querySelectorAll(".card-observer");
+		// console.log(cards);
+		const callback = (entries) => {
+			// console.log(entries);
+			// if (entries[0].isIntersecting) {
+			// 	entries[0].target.style.display = "none";
+			// }
+			// if (!entries[0].isIntersecting) {
+			// 	entries[0].target.style.display = "inline-flex";
+			// }
+			// entries.target.style.opacity = "1";
+		};
+		const observer = new IntersectionObserver(callback);
 
+		observer.observe(node);
+	};
 	// import { flip } from "svelte/animate";
 	import { quintInOut } from "svelte/easing";
 	import AnimationWrapper from "./Animation-wrapper.svelte";
@@ -18,6 +34,7 @@
 		y: 0,
 		opacity: 0,
 	};
+
 	export let product = [];
 	export let skeleton = false;
 	const dispatch = createEventDispatcher();
@@ -312,7 +329,11 @@
 		</main>
 	</article>
 {:else}
-	<article class="wrapper" in:fly={in_fly} out:fly={out_fly}>
+	<article
+		use:IntersectionCard
+		class="wrapper card-observer"
+		in:fly={in_fly}
+		out:fly={out_fly}>
 		<main class="container-card">
 			{#key current}
 				<div

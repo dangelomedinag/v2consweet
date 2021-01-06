@@ -1,8 +1,7 @@
 <script>
-	import ButtonAncle from "../testing/Button-ancle.svelte";
 	function c(e) {
-		// e.preventDefault();
 		console.log("clicked");
+		changed = !changed;
 	}
 </script>
 
@@ -105,11 +104,6 @@
 	@media (min-width: 1280px) {
 	}
 </style>
-
-<ButtonAncle href="/dasda">anchor badge</ButtonAncle>
-<ButtonAncle on:click={c}>button badge</ButtonAncle>
-<ButtonAncle main on:click={c}>button main</ButtonAncle>
-<ButtonAncle main href="/dasda">anchor main</ButtonAncle>
 
 <div class="contact-methods-wrapper">
 	<div class="rrss-item">
