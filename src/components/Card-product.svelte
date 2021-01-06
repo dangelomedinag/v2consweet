@@ -17,6 +17,15 @@
 
 		observer.observe(node);
 	};
+
+	function resizingImg(url) {
+		let splited = url.split("upload");
+		let word = "upload/";
+		let config = "w_200,h_200,c_fill";
+
+		let newUrl = splited[0] + word + config + splited[1];
+		return newUrl;
+	}
 	// import { flip } from "svelte/animate";
 	import { quintInOut } from "svelte/easing";
 	import AnimationWrapper from "./Animation-wrapper.svelte";
@@ -339,7 +348,7 @@
 				<div
 					on:click={ProductClickEvent(product)}
 					class="top"
-					style="background: url('{product.imgs[current]}') no-repeat center center; background-size: cover;">
+					style="background: url('{resizingImg(product.imgs[current])}') no-repeat center center; background-size: cover;">
 					<button on:click={prevImg}><svg class="svg-reset" viewBox="0 0 20 20">
 							<path
 								fill="current"
