@@ -1,25 +1,32 @@
 <script>
+	//? imports system
+	import { createEventDispatcher } from "svelte";
 	import { quintInOut } from "svelte/easing";
 	import { scale, slide } from "svelte/transition";
-	import { createEventDispatcher } from "svelte";
+	//? imports components, store and function
 
+	//? props
+	export let main = false,
+		block = false,
+		outline = true,
+		href = null;
+
+	//? variables
+
+	const dispatch = createEventDispatcher();
 	const scaleTransition = {
 		delay: 400,
 		duration: 1000,
 		easing: quintInOut,
 		opacity: 0,
 	};
-	const dispatch = createEventDispatcher();
+
+	//? Logic
 
 	function clickEvent() {
 		dispatch("click");
 		console.log("click link-item event");
 	}
-
-	export let main = false,
-		block = false,
-		outline = true,
-		href = null;
 </script>
 
 <style>

@@ -1,35 +1,16 @@
 <script>
-	import { afterUpdate, createEventDispatcher, onMount } from "svelte";
-	const IntersectionCard = (node) => {
-		// let node = document.querySelectorAll(".card-observer");
-		// console.log(cards);
-		const callback = (entries) => {
-			// console.log(entries);
-			// if (entries[0].isIntersecting) {
-			// 	entries[0].target.style.display = "none";
-			// }
-			// if (!entries[0].isIntersecting) {
-			// 	entries[0].target.style.display = "inline-flex";
-			// }
-			// entries.target.style.opacity = "1";
-		};
-		const observer = new IntersectionObserver(callback);
+	//? imports system
 
-		observer.observe(node);
-	};
-
-	function resizingImg(url) {
-		let splited = url.split("upload");
-		let word = "upload/";
-		let config = "w_200,h_200,c_fill";
-
-		let newUrl = splited[0] + word + config + splited[1];
-		return newUrl;
-	}
-	// import { flip } from "svelte/animate";
+	import { createEventDispatcher } from "svelte";
 	import { quintInOut } from "svelte/easing";
-	import AnimationWrapper from "./Animation-wrapper.svelte";
-	import { fly, scale, crossfade, blur } from "svelte/transition";
+	import { fly, scale } from "svelte/transition";
+
+	//? imports components, store and function
+
+	//? props
+
+	export let product = [];
+	export let skeleton = false;
 	export let in_fly = {
 		delay: 0,
 		duration: 1800,
@@ -44,12 +25,38 @@
 		opacity: 0,
 	};
 
-	export let product = [];
-	export let skeleton = false;
-	const dispatch = createEventDispatcher();
+	//? variables
 
+	const dispatch = createEventDispatcher();
 	let current = 0;
 	$: imgsCount = product.imgs?.length - 1;
+
+	//? Logic
+
+	const IntersectionCard = (node) => {
+		// let node = document.querySelectorAll(".card-observer");
+		// console.log(cards);
+		// const callback = (entries) => {
+		// console.log(entries);
+		// if (entries[0].isIntersecting) {
+		// 	entries[0].target.style.display = "none";
+		// }
+		// if (!entries[0].isIntersecting) {
+		// 	entries[0].target.style.display = "inline-flex";
+		// }
+		// entries.target.style.opacity = "1";
+		// };
+		// const observer = new IntersectionObserver(callback);
+		// observer.observe(node);
+	};
+
+	function resizingImg(url) {
+		let splited = url.split("upload");
+		let word = "upload/";
+		let config = "w_200,h_200,c_fill";
+		let newUrl = splited[0] + word + config + splited[1];
+		return newUrl;
+	}
 
 	function ProductClickEvent(product) {
 		dispatch("clickCard", { product });
@@ -59,6 +66,7 @@
 	function nextImg() {
 		current == imgsCount ? (current = 0) : current++;
 	}
+
 	function prevImg() {
 		current == 0 ? (current = imgsCount) : current--;
 	}

@@ -1,8 +1,9 @@
 <script>
-	function c(e) {
-		console.log("clicked");
-		changed = !changed;
-	}
+	//? imports system
+	//? imports components, store and function
+	//? props
+	//? variables
+	//? Logic
 </script>
 
 <style>

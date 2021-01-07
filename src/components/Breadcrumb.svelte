@@ -1,10 +1,21 @@
 <script>
+	//? imports system
+
+	import { createEventDispatcher } from "svelte";
 	import { quintInOut } from "svelte/easing";
 	import { fly } from "svelte/transition";
-	import { createEventDispatcher } from "svelte";
-	import AnimationWrapper from "./Animation-wrapper.svelte";
-	const dispatch = createEventDispatcher();
+
+	//? imports components, store and function
+
+	//? props
+
 	export let levels = [];
+
+	//? variables
+
+	const dispatch = createEventDispatcher();
+
+	//? Logic
 </script>
 
 <style>
@@ -96,7 +107,6 @@
 	}
 </style>
 
-<!-- <AnimationWrapper duration={800}> -->
 <div class="wrapper-breadcrumb">
 	{#each levels as item, index}
 		{#if index <= 0}
@@ -122,11 +132,6 @@
 					fill="current"
 					d="M11.611,10.049l-4.76-4.873c-0.303-0.31-0.297-0.804,0.012-1.105c0.309-0.304,0.803-0.293,1.105,0.012l5.306,5.433c0.304,0.31,0.296,0.805-0.012,1.105L7.83,15.928c-0.152,0.148-0.35,0.223-0.547,0.223c-0.203,0-0.406-0.08-0.559-0.236c-0.303-0.309-0.295-0.803,0.012-1.104L11.611,10.049z" />
 			</svg>
-			<!-- <svg class="svg-reset" viewBox="0 0 20 20">
-              <path
-                fill="current"
-                d="M12.522,10.4l-3.559,3.562c-0.172,0.173-0.451,0.176-0.625,0c-0.173-0.173-0.173-0.451,0-0.624l3.248-3.25L8.161,6.662c-0.173-0.173-0.173-0.452,0-0.624c0.172-0.175,0.451-0.175,0.624,0l3.738,3.736C12.695,9.947,12.695,10.228,12.522,10.4 M18.406,10c0,4.644-3.764,8.406-8.406,8.406c-4.644,0-8.406-3.763-8.406-8.406S5.356,1.594,10,1.594C14.643,1.594,18.406,5.356,18.406,10M17.521,10c0-4.148-3.374-7.521-7.521-7.521c-4.148,0-7.521,3.374-7.521,7.521c0,4.147,3.374,7.521,7.521,7.521C14.147,17.521,17.521,14.147,17.521,10" />
-            </svg> -->
 			<span
 				in:fly={{ delay: 75, duration: 1000, easing: quintInOut, y: -200 }}
 				out:fly={{ duration: 300, easing: quintInOut, y: -50 }}
@@ -166,4 +171,3 @@
 		{/if}
 	{/each}
 </div>
-<!-- </AnimationWrapper> -->

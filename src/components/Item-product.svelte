@@ -1,9 +1,13 @@
 <script>
-	import { quintInOut, quintOut, quintIn } from "svelte/easing";
-	import { fly, scale, slide } from "svelte/transition";
+	//? imports system
+	import { fly } from "svelte/transition";
+	//? imports components, store and function
+	//? props
+
 	export let product, anim_in, anim_out;
-	// in { delay: 400, duration: 100, easing: quintOut, x: 400, opacity: 0 }
-	// out { duration: 400, easing: quintIn, x: -400, opacity: 0 }
+
+	//? variables
+	//? Logic
 </script>
 
 <style>
@@ -170,15 +174,12 @@
 	}
 </style>
 
-<!-- https://res.cloudinary.com/sapper-heroku-test/image/upload/w_150,h_150,c_fill/v1607289009/sapper/aewgkxpt4csx1rbdfwte.jpg -->
-<!-- https://res.cloudinary.com/demo/image/upload/w_150,h_150,c_fill/sample.gif -->
 <div class="courses-container" in:fly={anim_in} out:fly={anim_out}>
 	<div class="course">
 		<div class="course-preview">
 			<h6>{product.tipo}</h6>
 			<h2 class="title">{product.nombre}</h2>
 			<span class="btn">precio: ${product.precio}</span>
-			<!-- <a href="#">View all chapters <i class="fas fa-chevron-right" /></a> -->
 		</div>
 		<div class="course-info">
 			<h6>Descripcion de producto</h6>
@@ -195,7 +196,6 @@
 			class="thumblr"
 			src="https://res.cloudinary.com/sapper-heroku-test/image/upload/w_150,h_150,c_fill/v1607289009/sapper/aewgkxpt4csx1rbdfwte.jpg"
 			alt="xx" />
-		<!-- <div class="img-container"></div> -->
 	{/each}
 </div>
 <div
