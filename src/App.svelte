@@ -1,12 +1,14 @@
 <script>
+	//? imports system
 	import { onMount } from "svelte";
+	import { quintIn, quintOut } from "svelte/easing";
+	import { fly } from "svelte/transition";
+
+	//? imports components, store and function
 	import Section from "./components/Section.svelte";
 	import ScrollWrapper from "./components/Scroll-wrapper.svelte";
 	import SectionLinks from "./components/Section-links.svelte";
 	import SubSection from "./components/Sub-section.svelte";
-	import { flip } from "svelte/animate";
-	import { fly, scale, fade, slide } from "svelte/transition";
-	import { quintInOut, quintIn, quintOut } from "svelte/easing";
 	import CardProduct from "./components/Card-product.svelte";
 	import ItemProduct from "./components/Item-product.svelte";
 	import AnimationWrapper from "./components/Animation-wrapper.svelte";
@@ -14,14 +16,9 @@
 	import ContactMethods from "./components/Contact-methods.svelte";
 	import SectionButton from "./components/Section-button.svelte";
 
-	let changed = false;
-	// in { delay: 400, duration: 100, easing: quintOut, x: 400, opacity: 0 }
-	// out { duration: 400, easing: quintIn, x: -400, opacity: 0 }
-	let ItemProductAnim = {
-		in: { delay: 600, duration: 600, easing: quintOut, x: 400, opacity: 0 },
-		out: { duration: 600, easing: quintIn, x: -400, opacity: 0 },
-	};
+	//? props
 
+	//? variables
 	const app = {
 		ready: (callback) => {
 			// In case the document is already rendered
@@ -33,9 +30,30 @@
 		search: {},
 		keys: {},
 		overlay: {},
-		animations: { tracked: [] },
+		animations: {
+			tracked: [
+				[
+					ItemProduct.name,
+					{
+						transition: fly,
+						intro: {
+							delay: 600,
+							duration: 600,
+							easing: quintOut,
+							x: 400,
+							opacity: 0,
+						},
+						outro: { duration: 600, easing: quintIn, x: -400, opacity: 0 },
+					},
+				],
+			],
+		},
 	};
 
+	let ItemProductAnim = {
+		in: { delay: 600, duration: 600, easing: quintOut, x: 400, opacity: 0 },
+		out: { duration: 600, easing: quintIn, x: -400, opacity: 0 },
+	};
 	let levels = ["home"];
 	let raw_products = [];
 	let raw_categories = [];
@@ -43,6 +61,11 @@
 	let categories = [];
 	let product = {};
 	$: empty = products.length <= 0 && categories.length <= 0;
+
+	//? Logic
+
+	app.ready(() => console.log(app.animations.tracked[0][1]));
+	console.log($$props);
 
 	onMount(async () => {
 		const promise = await fetch(
@@ -53,8 +76,8 @@
 		);
 		products = await promise.json();
 		categories = await promiseCategories.json();
-		raw_categories = categories;
 		raw_products = products;
+		raw_categories = categories;
 		product = products[0];
 	});
 
@@ -93,14 +116,6 @@
 		levels = ["home"];
 	}
 	function level2(e, title = "Productos") {
-		let cards = document.querySelectorAll(".card-observer");
-		console.log(cards);
-		const callback = (entries) => {
-			// console.log(entries);
-		};
-		const observer = new IntersectionObserver(callback);
-
-		cards.forEach((item) => observer.observe(item));
 		levels = ["home", levels[2] ? levels[1] : title];
 		window.scrollTo({
 			top: 0,
@@ -362,8 +377,9 @@
 					{#key product}
 						<ItemProduct
 							{product}
-							anim_in={ItemProductAnim.in}
-							anim_out={ItemProductAnim.out} />
+							transition={app.animations.tracked[0][1].transition}
+							intro={app.animations.tracked[0][1].intro}
+							outro={app.animations.tracked[0][1].outro} />
 					{/key}
 				</SubSection>
 			{/if}

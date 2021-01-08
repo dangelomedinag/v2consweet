@@ -1,8 +1,17 @@
 <script>
+	//? imports system
 	import { flip } from "svelte/animate";
 	import { fly, scale } from "svelte/transition";
 	import { quintInOut } from "svelte/easing";
+
+	//? imports components, store and function
 	import AnimationWrapper from "./Animation-wrapper.svelte";
+
+	//? props
+
+	//? variables
+
+	//? Logic
 </script>
 
 <style>

@@ -53,7 +53,7 @@
 	function resizingImg(url) {
 		let splited = url.split("upload");
 		let word = "upload/";
-		let config = "w_200,h_200,c_fill";
+		let config = "w_350,h_240,c_fill";
 		let newUrl = splited[0] + word + config + splited[1];
 		return newUrl;
 	}
@@ -146,23 +146,38 @@
 		width: 100%;
 		display: flex;
 		justify-content: space-between;
-		will-change: background;
+		position: relative;
+	}
+
+	.image-card {
+		object-fit: cover;
+		width: 100%;
+		height: 100%;
 	}
 
 	.wrapper .container-card .top button {
-		display: inline-flex;
+		position: absolute;
+		top: 0;
+		opacity: 0;
+		height: 100%;
+		background-color: var(--primary-opacity-2);
+		outline: 0;
+		/* display: inline-flex;
 		justify-content: center;
 		align-items: center;
-		height: 100%;
 		margin: auto 0;
-		opacity: 0;
-		background-color: var(--primary-opacity-2);
 		color: white;
 		padding: 0 0.5em;
 		font-size: 1em;
-		outline: 0;
 		cursor: pointer;
-		transition: opacity 0.4s ease-in-out, background 0.2s ease-in;
+		transition: opacity 0.4s ease-in-out, background 0.2s ease-in; */
+	}
+
+	.b-left {
+		right: 0;
+	}
+	.b-right {
+		left: 0;
 	}
 
 	.wrapper .container-card .top button:hover {
@@ -352,23 +367,27 @@
 		in:fly={in_fly}
 		out:fly={out_fly}>
 		<main class="container-card">
-			{#key current}
-				<div
+			<div class="top">
+				<img
 					on:click={ProductClickEvent(product)}
-					class="top"
-					style="background: url('{resizingImg(product.imgs[current])}') no-repeat center center; background-size: cover;">
-					<button on:click={prevImg}><svg class="svg-reset" viewBox="0 0 20 20">
-							<path
-								fill="current"
-								d="M8.388,10.049l4.76-4.873c0.303-0.31,0.297-0.804-0.012-1.105c-0.309-0.304-0.803-0.293-1.105,0.012L6.726,9.516c-0.303,0.31-0.296,0.805,0.012,1.105l5.433,5.307c0.152,0.148,0.35,0.223,0.547,0.223c0.203,0,0.406-0.08,0.559-0.236c0.303-0.309,0.295-0.803-0.012-1.104L8.388,10.049z" />
-						</svg></button>
-					<button on:click={nextImg}><svg class="svg-reset" viewBox="0 0 20 20">
-							<path
-								fill="current"
-								d="M11.611,10.049l-4.76-4.873c-0.303-0.31-0.297-0.804,0.012-1.105c0.309-0.304,0.803-0.293,1.105,0.012l5.306,5.433c0.304,0.31,0.296,0.805-0.012,1.105L7.83,15.928c-0.152,0.148-0.35,0.223-0.547,0.223c-0.203,0-0.406-0.08-0.559-0.236c-0.303-0.309-0.295-0.803,0.012-1.104L11.611,10.049z" />
-						</svg></button>
-				</div>
-			{/key}
+					class="image-card"
+					src={resizingImg(product.imgs[current])}
+					alt="dsdad" />
+				<button on:click={prevImg} class="b-right"><svg
+						class="svg-reset"
+						viewBox="0 0 20 20">
+						<path
+							fill="current"
+							d="M8.388,10.049l4.76-4.873c0.303-0.31,0.297-0.804-0.012-1.105c-0.309-0.304-0.803-0.293-1.105,0.012L6.726,9.516c-0.303,0.31-0.296,0.805,0.012,1.105l5.433,5.307c0.152,0.148,0.35,0.223,0.547,0.223c0.203,0,0.406-0.08,0.559-0.236c0.303-0.309,0.295-0.803-0.012-1.104L8.388,10.049z" />
+					</svg></button>
+				<button on:click={nextImg} class="b-left"><svg
+						class="svg-reset"
+						viewBox="0 0 20 20">
+						<path
+							fill="current"
+							d="M11.611,10.049l-4.76-4.873c-0.303-0.31-0.297-0.804,0.012-1.105c0.309-0.304,0.803-0.293,1.105,0.012l5.306,5.433c0.304,0.31,0.296,0.805-0.012,1.105L7.83,15.928c-0.152,0.148-0.35,0.223-0.547,0.223c-0.203,0-0.406-0.08-0.559-0.236c-0.303-0.309-0.295-0.803,0.012-1.104L11.611,10.049z" />
+					</svg></button>
+			</div>
 			<div class="bottom" on:click={ProductClickEvent(product)}>
 				<div class="details">
 					<h1>{product.nombre}</h1>

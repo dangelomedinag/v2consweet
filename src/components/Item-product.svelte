@@ -1,13 +1,46 @@
 <script>
 	//? imports system
-	import { fly } from "svelte/transition";
+	// import { fly } from "svelte/transition";
 	//? imports components, store and function
 	//? props
 
-	export let product, anim_in, anim_out;
+	export let product,
+		transition = unanimated,
+		intro,
+		outro;
 
 	//? variables
+	let current = product.imgs[0];
+
 	//? Logic
+
+	function resizingTumblr(url) {
+		let splited = url.split("upload");
+		let word = "upload/";
+		let config = "w_70,h_70,c_fill";
+		let newUrl = splited[0] + word + config + splited[1];
+		return newUrl;
+	}
+
+	function resizingImg(url) {
+		let splited = url.split("upload");
+		let word = "upload/";
+		let config = "w_700,h_700,c_fill";
+		let newUrl = splited[0] + word + config + splited[1];
+		return newUrl;
+	}
+
+	function setCurrentImg(index) {
+		current = product.imgs[index];
+	}
+
+	function unanimated(node, config) {
+		return {
+			css: (t) => {
+				return ``;
+			},
+		};
+	}
 </script>
 
 <style>
@@ -163,6 +196,7 @@
 
 	} */
 	.thumblr {
+		cursor: pointer;
 		object-fit: cover;
 		width: 80px;
 		height: 80px;
@@ -174,7 +208,7 @@
 	}
 </style>
 
-<div class="courses-container" in:fly={anim_in} out:fly={anim_out}>
+<div class="courses-container" in:transition={intro} out:transition={outro}>
 	<div class="course">
 		<div class="course-preview">
 			<h6>{product.tipo}</h6>
@@ -194,14 +228,12 @@
 	{#each product.imgs as img}
 		<img
 			class="thumblr"
-			src="https://res.cloudinary.com/sapper-heroku-test/image/upload/w_150,h_150,c_fill/v1607289009/sapper/aewgkxpt4csx1rbdfwte.jpg"
-			alt="xx" />
+			src={resizingTumblr(img)}
+			alt="xx"
+			on:click={setCurrentImg(product.imgs.indexOf(img))} />
 	{/each}
 </div>
 <div
 	style="width: 100%;display: flex;justify-content: center;align-items: center;">
-	<img
-		class="img-full"
-		src="https://res.cloudinary.com/sapper-heroku-test/image/upload/w_500,h_500,c_fill/v1607289009/sapper/aewgkxpt4csx1rbdfwte.jpg"
-		alt="xx" />
+	<img class="img-full" src={resizingImg(current)} alt="xx" />
 </div>

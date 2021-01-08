@@ -36,14 +36,17 @@
 	//? variables
 
 	//? Logic
+	function stateAnimations(e) {
+		// console.log(e);
+	}
 </script>
 
 <div
 	in:fly={intro}
 	out:fly={outro}
-	on:introstart={() => console.log('intro started')}
-	on:outrostart={() => console.log('outro started')}
-	on:introend={() => console.log('intro ended')}
-	on:outroend={() => console.log('outro ended')}>
+	on:introstart={stateAnimations}
+	on:outrostart={stateAnimations}
+	on:introend={stateAnimations}
+	on:outroend={stateAnimations}>
 	<slot />
 </div>
