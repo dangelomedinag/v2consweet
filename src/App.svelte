@@ -333,15 +333,13 @@
 							</SectionButton>
 						{/each}
 						<div>
-							<SectionButton main on:click={level2}>
+							<SectionButton main bouncy on:click={level2}>
 								Mostrar todos
 							</SectionButton>
 						</div>
 					{/if}
 				</Section>
-			</AnimationWrapper>
 
-			<AnimationWrapper>
 				<Section id="section-contact">
 					<p>
 						¡Conversemos un poco!🤗. A través de la siguientes vias, podremos
@@ -353,11 +351,11 @@
 					<SectionButton main>Déjanos un comemtario</SectionButton>
 					<SectionButton main>Por mayor</SectionButton>
 				</Section>
-			</AnimationWrapper>
 
-			<Section id="section-about">
-				<div />
-			</Section>
+				<Section id="section-about">
+					<div />
+				</Section>
+			</AnimationWrapper>
 		{:else}
 			<Breadcrumb {levels} on:level1={level1} on:level2={level2} />
 			{#if levels.length == 2}

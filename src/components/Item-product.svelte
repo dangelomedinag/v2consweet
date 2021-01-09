@@ -17,7 +17,7 @@
 	function resizingTumblr(url) {
 		let splited = url.split("upload");
 		let word = "upload/";
-		let config = "w_70,h_70,c_fill";
+		let config = "w_50,h_50,c_fill";
 		let newUrl = splited[0] + word + config + splited[1];
 		return newUrl;
 	}
@@ -25,7 +25,7 @@
 	function resizingImg(url) {
 		let splited = url.split("upload");
 		let word = "upload/";
-		let config = "w_700,h_700,c_fill";
+		let config = "w_500,h_500,c_fill";
 		let newUrl = splited[0] + word + config + splited[1];
 		return newUrl;
 	}
@@ -184,12 +184,19 @@
 
 	@media (min-width: 1280px) {
 	}
+	.images-visor-wrapper {
+		padding: 1em;
+		max-width: 500px;
+		max-height: 600px;
+		margin: 0 auto;
+		/* background-color: var(--neutral); */
+	}
 
 	.list-images-wrapper {
 		/* background: red; */
 		width: 100%;
 		display: flex;
-		justify-content: center;
+		justify-content: flex-start;
 		align-items: center;
 	}
 	/* .img-container{
@@ -198,13 +205,20 @@
 	.thumblr {
 		cursor: pointer;
 		object-fit: cover;
-		width: 80px;
-		height: 80px;
+		width: 100px;
+		height: 100px;
 	}
 	.img-full {
 		object-fit: cover;
-		width: 500px;
-		height: 500px;
+		width: 100%;
+		/* max-width: 500px; */
+
+		display: block;
+		/* height: 500px; */
+	}
+
+	.active {
+		border: 2px solid var(--primary);
 	}
 </style>
 
@@ -224,16 +238,16 @@
 	</div>
 </div>
 <hr class="divider" />
-<div class="list-images-wrapper">
-	{#each product.imgs as img}
-		<img
-			class="thumblr"
-			src={resizingTumblr(img)}
-			alt="xx"
-			on:click={setCurrentImg(product.imgs.indexOf(img))} />
-	{/each}
-</div>
-<div
-	style="width: 100%;display: flex;justify-content: center;align-items: center;">
-	<img class="img-full" src={resizingImg(current)} alt="xx" />
+<div class="images-visor-wrapper">
+	<div class="list-images-wrapper">
+		{#each product.imgs as img, i}
+			<img
+				class:active={product.imgs.indexOf(img) == product.imgs.indexOf(current)}
+				class="thumblr"
+				src={resizingTumblr(img)}
+				alt="xx"
+				on:mouseover={setCurrentImg(product.imgs.indexOf(img))} />
+		{/each}
+	</div>
+	<div><img class="img-full" src={resizingImg(current)} alt="xx" /></div>
 </div>

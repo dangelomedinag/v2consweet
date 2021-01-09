@@ -60,7 +60,8 @@
 		font-weight: 700;
 	}
 
-	.home {
+	.home,
+	.products {
 		cursor: pointer;
 	}
 
@@ -142,7 +143,7 @@
 			<svg
 				in:fly={{ delay: 75, duration: 1000, easing: quintInOut, y: -200 }}
 				out:fly={{ duration: 300, easing: quintInOut, y: -50 }}
-				class="icon hide hide-icon"
+				class="icon products hide hide-icon"
 				class:show={levels.length > 2}
 				viewBox="0 0 20 20"
 				on:click={() => dispatch('level2')}>

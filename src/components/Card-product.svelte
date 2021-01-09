@@ -36,18 +36,21 @@
 	const IntersectionCard = (node) => {
 		// let node = document.querySelectorAll(".card-observer");
 		// console.log(cards);
-		// const callback = (entries) => {
-		// console.log(entries);
-		// if (entries[0].isIntersecting) {
-		// 	entries[0].target.style.display = "none";
-		// }
-		// if (!entries[0].isIntersecting) {
-		// 	entries[0].target.style.display = "inline-flex";
-		// }
-		// entries.target.style.opacity = "1";
-		// };
-		// const observer = new IntersectionObserver(callback);
-		// observer.observe(node);
+		const callback = (entries) => {
+			// entries[0].target.style.display = "inline-flex";
+			// console.log(entries);
+			// if (entries[0].isIntersecting) {
+			// 	entries[0].target.style.display = "inline-flex";
+			// 	console.log(entries[0].target);
+			// }
+			if (!entries[0].isIntersecting) {
+				// entries[0].target.style.display = "none";
+				console.log(entries);
+			}
+			// entries.target.style.opacity = "1";
+		};
+		const observer = new IntersectionObserver(callback);
+		observer.observe(node);
 	};
 
 	function resizingImg(url) {
@@ -82,6 +85,10 @@
 			transform: translate(200%);
 		}
 	}
+
+	/* .hideCard {
+		display: none;
+	} */
 
 	/* loading card */
 	.loading h1 {
