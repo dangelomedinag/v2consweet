@@ -57,7 +57,7 @@
 	.breadcrumb.active {
 		/* background-color: var(--primary-opacity-1); */
 		color: var(--primary);
-		font-weight: 700;
+		/* font-weight: 700; */
 	}
 
 	.home,

@@ -160,12 +160,95 @@
 		background-color: var(--primary-opacity-3);
 		border: none;
 	}
+
+	@media (min-width: 1280px) {
+	}
+	.section-wrapper {
+		/* margin: 1.5em; */
+		padding: 1.5em;
+		/* max-width: 400px; */
+		/* max-height: 400px; */
+		margin: 1em auto;
+	}
+	.layout {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: space-evenly;
+		align-items: flex-start;
+		width: 100%;
+	}
+	.col {
+		width: 100%;
+		max-width: 100%;
+	}
+
+	.contact-methods-wrapper {
+		max-width: 400px;
+		margin: 1em auto;
+	}
+
+	.list-images-wrapper {
+		border-radius: 10px;
+		overflow: hidden;
+		background: var(--neutral-6);
+		width: 100%;
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		flex-wrap: no-wrap;
+		margin-bottom: 0.5em;
+		overflow-x: auto;
+		border: 2px solid var(--primary);
+	}
+
+	.thumblr {
+		flex: 1 0 80px;
+		height: 80px;
+		min-width: 60px;
+		max-width: 80px;
+		min-height: 60px;
+		/* min-height: 70px; */
+		cursor: pointer;
+		object-fit: cover;
+		/* min-width: 70px;
+		*/
+		/* width: calc(100% / 6); */
+	}
+	.img-full {
+		border-radius: 10px;
+		overflow: hidden;
+		object-fit: cover;
+		width: 100%;
+		height: auto;
+	}
+
+	.active {
+		/* border: 2px solid var(--primary); */
+	}
+
+	.subtitle {
+		font-size: 1.3em;
+		height: 80px;
+		min-height: 60px;
+		margin: 0;
+		margin-bottom: 0.5em;
+	}
 	@media (min-width: 640px) {
 	}
 
 	@media (min-width: 768px) {
 		.course {
 			flex-direction: row;
+		}
+		.col {
+			max-width: calc(50% - 1em);
+		}
+		.col:nth-child(1) {
+			margin-right: 0.5em;
+		}
+		.col:nth-child(2) {
+			margin-left: 0.5em;
 		}
 	}
 
@@ -179,41 +262,6 @@
 		.course-info {
 			width: 60%;
 		}
-	}
-
-	@media (min-width: 1280px) {
-	}
-	.images-visor-wrapper {
-		/* margin: 1.5em; */
-		/* padding: 1.5em; */
-		max-width: 500px;
-		max-height: 600px;
-		margin: 1em auto;
-		border-radius: 10px;
-		overflow: hidden;
-	}
-
-	.list-images-wrapper {
-		background: var(--neutral-6);
-		width: 100%;
-		display: flex;
-		justify-content: flex-start;
-		align-items: center;
-	}
-
-	.thumblr {
-		cursor: pointer;
-		object-fit: cover;
-		width: calc(100% / 6);
-	}
-	.img-full {
-		object-fit: cover;
-		width: 100%;
-		display: block;
-	}
-
-	.active {
-		border: 2px solid var(--primary);
 	}
 </style>
 
@@ -233,20 +281,24 @@
 	</div>
 </div>
 <hr class="divider" />
-<div transition:transition class="images-visor-wrapper">
-	<div class="list-images-wrapper">
-		{#each product.imgs as img (img)}
-			<img
-				class:active={product.imgs.indexOf(img) == product.imgs.indexOf(current)}
-				class="thumblr"
-				src={resizingTumblr(img)}
-				alt="product-thumbrl-preview"
-				on:mouseover={setCurrentImg(product.imgs.indexOf(img))} />
-		{/each}
+<div transition:transition class="section-wrapper">
+	<div class="layout">
+		<div class="col">
+			<h3 class="subtitle">Contacto</h3>
+			<slot />
+		</div>
+		<div class="col">
+			<div class="list-images-wrapper">
+				{#each product.imgs as img (img)}
+					<img
+						class:active={product.imgs.indexOf(img) == product.imgs.indexOf(current)}
+						class="thumblr"
+						src={resizingTumblr(img)}
+						alt="product-thumbrl-preview"
+						on:mouseover={setCurrentImg(product.imgs.indexOf(img))} />
+				{/each}
+			</div>
+			<img class="img-full" src={resizingImg(current)} alt="xx" />
+		</div>
 	</div>
-	<div><img class="img-full" src={resizingImg(current)} alt="xx" /></div>
-</div>
-<hr class="divider" />
-<div>
-	<slot />
 </div>

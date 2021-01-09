@@ -72,7 +72,7 @@
 		border-radius: 2em !important;
 		font-size: 0.9em;
 		/* padding: 0; */
-		padding: 0.5em 0.6em;
+		padding: 0.5em 0.6em 0.5em 1.5em;
 		font-weight: 700;
 		/* padding: 0.8em; */
 		background-color: transparent;
@@ -88,13 +88,16 @@
 		background-color: rgba(243, 101, 102, 0.2);
 	}
 	.icon-animated {
-		display: none;
+		/* display: none; */
+
 		opacity: 0;
 		transform: translateX(-100%);
-		transition: transform 0.6s, opacity 0.6 ease-in;
+		/* transition: transform 0.4s, opacity 0.4s ease-in; */
+		transition: all 0.2s ease-out;
 	}
 	.badge:hover .icon-animated {
-		display: inline-block;
+		/* display: inline-block; */
+		width: auto;
 		opacity: 1;
 		transform: translateX(0%);
 	}

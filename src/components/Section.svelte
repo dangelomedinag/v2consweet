@@ -88,6 +88,7 @@
 		display: block;
 		/* custom */
 		font-size: 2.5em;
+		font-weight: 900;
 	}
 
 	svg {
