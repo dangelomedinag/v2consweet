@@ -377,7 +377,9 @@
 							{product}
 							transition={app.animations.tracked[0][1].transition}
 							intro={app.animations.tracked[0][1].intro}
-							outro={app.animations.tracked[0][1].outro} />
+							outro={app.animations.tracked[0][1].outro}>
+							<ContactMethods />
+						</ItemProduct>
 					{/key}
 				</SubSection>
 			{/if}
