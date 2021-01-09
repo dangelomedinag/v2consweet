@@ -11,7 +11,6 @@ module.exports = {
 					'@babel/preset-env',
 					{
 						loose: true,
-						// No need for babel to resolve modules
 						modules: false,
 						targets: {
 							// ! Very important. Target es6+
