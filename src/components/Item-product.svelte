@@ -189,7 +189,6 @@
 		max-width: 500px;
 		max-height: 600px;
 		margin: 0 auto;
-		/* background-color: var(--neutral); */
 	}
 
 	.list-images-wrapper {
@@ -199,22 +198,16 @@
 		justify-content: flex-start;
 		align-items: center;
 	}
-	/* .img-container{
 
-	} */
 	.thumblr {
 		cursor: pointer;
 		object-fit: cover;
 		width: calc(100% / 6);
-		/* height: ; */
 	}
 	.img-full {
 		object-fit: cover;
 		width: 100%;
-		/* max-width: 500px; */
-
 		display: block;
-		/* height: 500px; */
 	}
 
 	.active {
