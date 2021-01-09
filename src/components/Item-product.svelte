@@ -244,3 +244,5 @@
 	</div>
 	<div><img class="img-full" src={resizingImg(current)} alt="xx" /></div>
 </div>
+<hr class="divider" />
+<h1>new information</h1>
