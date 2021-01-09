@@ -65,7 +65,7 @@
 	//? Logic
 
 	app.ready(() => console.log(app.animations.tracked[0][1]));
-	console.log($$props);
+	// console.log($$props);
 
 	onMount(async () => {
 		const promise = await fetch(
@@ -82,8 +82,8 @@
 	});
 
 	function nextProduct() {
-		ItemProductAnim.in.x = -400;
-		ItemProductAnim.out.x = 400;
+		app.animations.tracked[0][1].intro.x = -400;
+		app.animations.tracked[0][1].outro.x = 400;
 		let current = products.indexOf(product);
 		console.log(current);
 
@@ -97,8 +97,8 @@
 	}
 
 	function prevProduct() {
-		ItemProductAnim.in.x = 400;
-		ItemProductAnim.out.x = -400;
+		app.animations.tracked[0][1].intro.x = 400;
+		app.animations.tracked[0][1].outro.x = -400;
 		let current = products.indexOf(product);
 		console.log(current);
 
