@@ -1,6 +1,5 @@
 <script>
 	//? imports system
-	// import { fly } from "svelte/transition";
 	//? imports components, store and function
 	//? props
 
@@ -185,10 +184,13 @@
 	@media (min-width: 1280px) {
 	}
 	.images-visor-wrapper {
-		padding: 1em;
+		/* margin: 1.5em; */
+		/* padding: 1.5em; */
 		max-width: 500px;
 		max-height: 600px;
-		margin: 0 auto;
+		margin: 1em auto;
+		border-radius: 10px;
+		overflow: hidden;
 	}
 
 	.list-images-wrapper {
@@ -211,7 +213,7 @@
 	}
 
 	.active {
-		border: 2px solid var(--primary) unset;
+		border: 2px solid var(--primary);
 	}
 </style>
 
@@ -231,18 +233,20 @@
 	</div>
 </div>
 <hr class="divider" />
-<div class="images-visor-wrapper">
+<div transition:transition class="images-visor-wrapper">
 	<div class="list-images-wrapper">
-		{#each product.imgs as img, i}
+		{#each product.imgs as img (img)}
 			<img
 				class:active={product.imgs.indexOf(img) == product.imgs.indexOf(current)}
 				class="thumblr"
 				src={resizingTumblr(img)}
-				alt="xx"
+				alt="product-thumbrl-preview"
 				on:mouseover={setCurrentImg(product.imgs.indexOf(img))} />
 		{/each}
 	</div>
 	<div><img class="img-full" src={resizingImg(current)} alt="xx" /></div>
 </div>
 <hr class="divider" />
-<h1>new information</h1>
+<div>
+	<slot />
+</div>
