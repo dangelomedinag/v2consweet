@@ -193,7 +193,7 @@
 	}
 
 	.list-images-wrapper {
-		/* background: red; */
+		background: var(--neutral-6);
 		width: 100%;
 		display: flex;
 		justify-content: flex-start;
@@ -205,8 +205,8 @@
 	.thumblr {
 		cursor: pointer;
 		object-fit: cover;
-		width: 100px;
-		height: 100px;
+		width: calc(100% / 6);
+		/* height: ; */
 	}
 	.img-full {
 		object-fit: cover;
@@ -218,7 +218,7 @@
 	}
 
 	.active {
-		border: 2px solid var(--primary);
+		border: 2px solid var(--primary) unset;
 	}
 </style>
 
