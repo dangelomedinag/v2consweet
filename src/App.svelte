@@ -15,6 +15,7 @@
 	import Breadcrumb from "./components/Breadcrumb.svelte";
 	import ContactMethods from "./components/Contact-methods.svelte";
 	import SectionButton from "./components/Section-button.svelte";
+	import CardProductSkeleton from "./components/Card-product-skeleton.svelte";
 
 	//? props
 
@@ -57,14 +58,17 @@
 	let levels = ["home"];
 	let raw_products = [];
 	let raw_categories = [];
-	let products = [];
-	let categories = [];
-	let product = {};
-	$: empty = products.length <= 0 && categories.length <= 0;
+	let products;
+	let categories;
+	let product;
+
+	$: empty =
+		products == undefined && categories == undefined && product == undefined;
+	$: console.log(empty);
 
 	//? Logic
 
-	app.ready(() => console.log(app.animations.tracked[0][1]));
+	// app.ready(() => console.log(app.animations.tracked[0][1]));
 	// console.log($$props);
 
 	onMount(async () => {
@@ -74,11 +78,13 @@
 		const promiseCategories = await fetch(
 			"https://sapper-heroku-test.herokuapp.com/api/categorias.json"
 		);
-		products = await promise.json();
-		categories = await promiseCategories.json();
-		raw_products = products;
-		raw_categories = categories;
+		// setTimeout(async () => {
+		raw_products = await promise.json();
+		raw_categories = await promiseCategories.json();
+		products = raw_products;
+		categories = raw_categories;
 		product = products[0];
+		// }, 3000);
 	});
 
 	function nextProduct() {
@@ -172,6 +178,7 @@
 		border-top-right-radius: 1.5em;
 		overflow: hidden;
 		position: relative;
+		min-height: calc(100vh - var(--header-main-height));
 	}
 	p {
 		color: var(--neutral);
@@ -324,9 +331,8 @@
 		{#if levels.length <= 1}
 			<AnimationWrapper delay={400}>
 				<Section id="section-products">
-					<p />
-					<ScrollWrapper {products} on:clickCard={level3} />
 					{#if !empty}
+						<ScrollWrapper {products} on:clickCard={level3} />
 						{#each categories as { nombre: name, id } (id)}
 							<SectionButton on:click={tagsHandler(id, name)}>
 								{name}
@@ -337,37 +343,39 @@
 								Mostrar todos
 							</SectionButton>
 						</div>
+					{:else}
+						<CardProductSkeleton />
 					{/if}
-				</Section>
-
-				<Section id="section-contact">
-					<p>
-						¡Conversemos un poco!🤗. A través de la siguientes vias, podremos
-						ponernos en contacto.
-					</p>
-					{#if !empty}
-						<ContactMethods />
-					{/if}
-					<SectionButton main>Déjanos un comemtario</SectionButton>
-					<SectionButton main>Por mayor</SectionButton>
-				</Section>
-
-				<Section id="section-about">
-					<div />
 				</Section>
 			</AnimationWrapper>
+
+			<Section id="section-contact">
+				<p>
+					¡Conversemos un poco!🤗. A través de la siguientes vias, podremos
+					ponernos en contacto.
+				</p>
+				<ContactMethods />
+				<SectionButton main>Déjanos un comemtario</SectionButton>
+				<SectionButton main>Por mayor</SectionButton>
+			</Section>
+
+			<Section id="section-about">
+				<div />
+			</Section>
 		{:else}
 			<Breadcrumb {levels} on:level1={level1} on:level2={level2} />
 			{#if levels.length == 2}
 				<SubSection>
 					<div class="grid-products">
-						{#each products as item (item.id)}
-							<CardProduct
-								out_fly={{ delay: 0, duration: 0, opacity: 1, y: 0, x: 0 }}
-								in_fly={{ delay: 0, duration: 0, opacity: 1, y: 0, x: 0 }}
-								product={item}
-								on:clickCard={level3} />
-						{/each}
+						{#if !empty}
+							{#each products as item (item.id)}
+								<CardProduct
+									out_fly={{ delay: 0, duration: 0, opacity: 1, y: 0, x: 0 }}
+									in_fly={{ delay: 0, duration: 0, opacity: 1, y: 0, x: 0 }}
+									product={item}
+									on:clickCard={level3} />
+							{/each}
+						{/if}
 					</div>
 				</SubSection>
 			{:else if levels.length == 3}

@@ -65,28 +65,51 @@
 		text-decoration: none;
 		text-align: center;
 		cursor: pointer;
+		outline: 0;
 		/* margin: 0 auto; */
+	}
+	.link-item:focus {
+		box-shadow: 0 0 0 5px var(--secondary), 0 0 0 7px var(--primary-opacity-2);
+	}
+
+	.main {
+		color: var(--primary);
+		padding: 0 3em;
+		background-color: rgba(243, 101, 102, 0.05);
+		border: none;
+		transition: background 0.3s, color 0.3s;
+		border-radius: 10px;
+		line-height: 3.25;
+		user-select: none;
+		font-weight: 700;
+		width: 100%;
+		margin-top: 0.5em;
+		margin-bottom: 0.5em;
+	}
+
+	.main:hover {
+		background-color: var(--primary);
+		color: white;
 	}
 
 	.badge {
 		border-radius: 2em !important;
-		font-size: 0.9em;
-		/* padding: 0; */
-		padding: 0.5em 0.6em 0.5em 1.5em;
-		font-weight: 700;
-		/* padding: 0.8em; */
+		font-size: 0.8em;
+		padding: 0.5em 0 0.5em 1.2em;
+		font-weight: 300;
 		background-color: transparent;
 		color: white;
-		margin: 0 0.3em 0.8em 0;
-		/* width: auto; */
-		/* margin-bottom: 0.8em; */
+		transition: padding 0.2s ease-out;
+		margin: 0.5em 0.2em 0.5em 0.5em;
 	}
 
 	.badge:hover {
 		color: white;
 		border-color: var(--primary);
 		background-color: rgba(243, 101, 102, 0.2);
+		padding-right: 1.3em;
 	}
+
 	.icon-animated {
 		/* display: none; */
 
@@ -100,23 +123,6 @@
 		width: auto;
 		opacity: 1;
 		transform: translateX(0%);
-	}
-
-	.main {
-		color: var(--primary);
-		padding: 1em 3em;
-		background-color: rgba(243, 101, 102, 0.05);
-		border: none;
-		transition: background 0.3s, color 0.3s;
-		border-radius: 10px;
-		font-weight: 700;
-		width: 100%;
-		margin-bottom: 0.8em;
-	}
-
-	.main:hover {
-		background-color: var(--primary);
-		color: white;
 	}
 
 	.block {
@@ -136,23 +142,10 @@
 		/* fill: var(--primary); */
 	}
 
-	.badge:nth-child(1) {
-		animation-delay: 0.07s;
-	}
-	.badge:nth-child(2) {
-		animation-delay: 0.14s;
-	}
-	.badge:nth-child(3) {
-		animation-delay: 0.21s;
-	}
-	.badge:nth-child(4) {
-		animation-delay: 0.28s;
-	}
-
 	@media (min-width: 640px) {
 		.badge {
 			width: auto;
-			padding: 0.5em 1.5em;
+			/* padding: 0.5em 0.6em 0.5em 1.8em; */
 		}
 	}
 

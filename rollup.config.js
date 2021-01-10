@@ -42,10 +42,15 @@ export default {
 			compilerOptions: {
 				// enable run-time checks when not in production
 				dev: !production,
+				
 			},
 			preprocess: sveltePreprocess({
         postcss: {
-          plugins: [require("autoprefixer")()]
+					plugins: 
+					[ 
+						require("autoprefixer")(), 
+						require('cssnano')({preset: 'default'})
+					]
 				},
 				babel: {
 					presets: [

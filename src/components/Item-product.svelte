@@ -189,9 +189,10 @@
 	}
 
 	.list-images-wrapper {
+		position: relative;
 		border-radius: 10px;
 		overflow: hidden;
-		background: var(--neutral-6);
+		/* background: var(--neutral-6); */
 		width: 100%;
 		display: flex;
 		justify-content: flex-start;
@@ -199,21 +200,45 @@
 		flex-wrap: no-wrap;
 		margin-bottom: 0.5em;
 		overflow-x: auto;
-		border: 2px solid var(--primary);
+		border: 1px solid var(--primary);
 	}
 
-	.thumblr {
-		flex: 1 0 80px;
+	.list-images-wrapper::-webkit-scrollbar {
+		/* width: 100%; */
+		height: 5px;
+		background-color: white;
+		/* margin-top: 2em; */
+	}
+	/* Track */
+	.list-images-wrapper::-webkit-scrollbar-track {
+		/* height: 5px; */
+		/* margin: 0.8em; */
+		background: #2a221d;
+	}
+	/* Handle */
+	.list-images-wrapper::-webkit-scrollbar-thumb {
+		border-radius: 10px;
+		background: #f36262;
+	}
+	/* Handle on hover */
+	.list-images-wrapper::-webkit-scrollbar-thumb:hover {
+		background: #e98585;
+	}
+	.image-wrapper {
+		position: relative;
+		min-width: 60px;
 		height: 80px;
 		min-width: 60px;
 		max-width: 80px;
 		min-height: 60px;
-		/* min-height: 70px; */
+		margin: 5px 0;
+	}
+
+	.thumblr {
+		flex: 1 0 80px;
+		height: 100%;
 		cursor: pointer;
 		object-fit: cover;
-		/* min-width: 70px;
-		*/
-		/* width: calc(100% / 6); */
 	}
 	.img-full {
 		border-radius: 10px;
@@ -223,14 +248,21 @@
 		height: auto;
 	}
 
-	.active {
-		/* border: 2px solid var(--primary); */
+	.active::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 1;
+		background-color: var(--primary);
+		transform: translateY(100%);
+		transition: all 0.5s ease-in-out;
 	}
 
 	.subtitle {
 		font-size: 1.3em;
-		height: 80px;
-		min-height: 60px;
 		margin: 0;
 		margin-bottom: 0.5em;
 	}
@@ -241,9 +273,9 @@
 		.course {
 			flex-direction: row;
 		}
-		.col {
+		/* .col {
 			max-width: calc(50% - 1em);
-		}
+		} */
 		.col:nth-child(1) {
 			margin-right: 0.5em;
 		}
@@ -261,6 +293,10 @@
 		}
 		.course-info {
 			width: 60%;
+		}
+
+		.col {
+			max-width: 600px;
 		}
 	}
 </style>
@@ -290,15 +326,24 @@
 		<div class="col">
 			<div class="list-images-wrapper">
 				{#each product.imgs as img (img)}
-					<img
+					<div
 						class:active={product.imgs.indexOf(img) == product.imgs.indexOf(current)}
-						class="thumblr"
-						src={resizingTumblr(img)}
-						alt="product-thumbrl-preview"
-						on:mouseover={setCurrentImg(product.imgs.indexOf(img))} />
+						class="image-wrapper">
+						<img
+							class="thumblr"
+							src={resizingTumblr(img)}
+							alt="product-thumbrl-preview"
+							on:mouseover={setCurrentImg(product.imgs.indexOf(img))} />
+					</div>
 				{/each}
 			</div>
-			<img class="img-full" src={resizingImg(current)} alt="xx" />
+			{#each product.imgs as img (img)}
+				<img
+					class="img-full"
+					style="display: {product.imgs.indexOf(img) == product.imgs.indexOf(current) ? 'block' : 'none'}"
+					src={resizingImg(img)}
+					alt="xx" />
+			{/each}
 		</div>
 	</div>
 </div>

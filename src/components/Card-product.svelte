@@ -1,7 +1,7 @@
 <script>
 	//? imports system
 
-	import { createEventDispatcher } from "svelte";
+	import { createEventDispatcher, onMount } from "svelte";
 	import { quintInOut } from "svelte/easing";
 	import { fly, scale } from "svelte/transition";
 
@@ -9,8 +9,8 @@
 
 	//? props
 
-	export let product = [];
-	export let skeleton = false;
+	export let product;
+	// export let skeleton = false;
 	export let in_fly = {
 		delay: 0,
 		duration: 1800,
@@ -26,32 +26,15 @@
 	};
 
 	//? variables
-
 	const dispatch = createEventDispatcher();
-	let current = 0;
-	$: imgsCount = product.imgs?.length - 1;
+	const { imgs } = product;
+	let length = product.imgs.length - 1;
+	let index = 0;
+	$: current = imgs[index];
+
+	$: console.log(current);
 
 	//? Logic
-
-	const IntersectionCard = (node) => {
-		// let node = document.querySelectorAll(".card-observer");
-		// console.log(cards);
-		const callback = (entries) => {
-			// entries[0].target.style.display = "inline-flex";
-			// console.log(entries);
-			// if (entries[0].isIntersecting) {
-			// 	entries[0].target.style.display = "inline-flex";
-			// 	console.log(entries[0].target);
-			// }
-			if (!entries[0].isIntersecting) {
-				// entries[0].target.style.display = "none";
-				console.log(entries);
-			}
-			// entries.target.style.opacity = "1";
-		};
-		const observer = new IntersectionObserver(callback);
-		observer.observe(node);
-	};
 
 	function resizingImg(url) {
 		let splited = url.split("upload");
@@ -61,17 +44,17 @@
 		return newUrl;
 	}
 
-	function ProductClickEvent(product) {
+	function ProductClickEvent() {
 		dispatch("clickCard", { product });
 		console.log("click on card product");
 	}
 
 	function nextImg() {
-		current == imgsCount ? (current = 0) : current++;
+		index == length ? (index = 0) : index++;
 	}
 
 	function prevImg() {
-		current == 0 ? (current = imgsCount) : current--;
+		index == 0 ? (index = length) : index--;
 	}
 </script>
 
@@ -96,8 +79,8 @@
 		color: var(--neutral) !important;
 		margin-top: 3px;
 	}
-	.loading .buy i {
-		color: #c0c0c0 !important;
+	.loading .buy path {
+		fill: var(--neutral) !important;
 	}
 	.wrapper.loading {
 		background-color: var(--neutral) !important;
@@ -339,7 +322,7 @@
 	}
 </style>
 
-{#if skeleton}
+<!-- {#if skeleton}
 	<article
 		transition:scale={{ duration: 800, easing: quintInOut, start: 0.8 }}
 		class="wrapper loading">
@@ -367,59 +350,63 @@
 			</div>
 		</main>
 	</article>
-{:else}
-	<article
-		use:IntersectionCard
-		class="wrapper card-observer"
-		in:fly={in_fly}
-		out:fly={out_fly}>
-		<main class="container-card">
-			<div class="top">
-				<img
-					on:click={ProductClickEvent(product)}
-					class="image-card"
-					src={resizingImg(product.imgs[current])}
-					alt="dsdad" />
-				<button on:click={prevImg} class="b-right"><svg
-						class="svg-reset"
-						viewBox="0 0 20 20">
-						<path
-							fill="current"
-							d="M8.388,10.049l4.76-4.873c0.303-0.31,0.297-0.804-0.012-1.105c-0.309-0.304-0.803-0.293-1.105,0.012L6.726,9.516c-0.303,0.31-0.296,0.805,0.012,1.105l5.433,5.307c0.152,0.148,0.35,0.223,0.547,0.223c0.203,0,0.406-0.08,0.559-0.236c0.303-0.309,0.295-0.803-0.012-1.104L8.388,10.049z" />
-					</svg></button>
-				<button on:click={nextImg} class="b-left"><svg
-						class="svg-reset"
-						viewBox="0 0 20 20">
-						<path
-							fill="current"
-							d="M11.611,10.049l-4.76-4.873c-0.303-0.31-0.297-0.804,0.012-1.105c0.309-0.304,0.803-0.293,1.105,0.012l5.306,5.433c0.304,0.31,0.296,0.805-0.012,1.105L7.83,15.928c-0.152,0.148-0.35,0.223-0.547,0.223c-0.203,0-0.406-0.08-0.559-0.236c-0.303-0.309-0.295-0.803,0.012-1.104L11.611,10.049z" />
-					</svg></button>
+{:else} -->
+<article class="wrapper card-observer" in:fly={in_fly} out:fly={out_fly}>
+	<main class="container-card">
+		<div class="top">
+			<img
+				on:click={ProductClickEvent}
+				class="image-card"
+				src={resizingImg(current)}
+				alt="dsdad" />
+			<!-- {#each imgs as img (img)}
+					<img
+						on:click={ProductClickEvent}
+						class="image-card"
+						src={resizingImg(img)}
+						style="display: {imgs.indexOf(img) == index ? 'block' : 'none'}"
+						alt="dsdad" />
+				{/each} -->
+			<button on:click={prevImg} class="b-right"><svg
+					class="svg-reset"
+					viewBox="0 0 20 20">
+					<path
+						fill="current"
+						d="M8.388,10.049l4.76-4.873c0.303-0.31,0.297-0.804-0.012-1.105c-0.309-0.304-0.803-0.293-1.105,0.012L6.726,9.516c-0.303,0.31-0.296,0.805,0.012,1.105l5.433,5.307c0.152,0.148,0.35,0.223,0.547,0.223c0.203,0,0.406-0.08,0.559-0.236c0.303-0.309,0.295-0.803-0.012-1.104L8.388,10.049z" />
+				</svg></button>
+			<button on:click={nextImg} class="b-left"><svg
+					class="svg-reset"
+					viewBox="0 0 20 20">
+					<path
+						fill="current"
+						d="M11.611,10.049l-4.76-4.873c-0.303-0.31-0.297-0.804,0.012-1.105c0.309-0.304,0.803-0.293,1.105,0.012l5.306,5.433c0.304,0.31,0.296,0.805-0.012,1.105L7.83,15.928c-0.152,0.148-0.35,0.223-0.547,0.223c-0.203,0-0.406-0.08-0.559-0.236c-0.303-0.309-0.295-0.803,0.012-1.104L11.611,10.049z" />
+				</svg></button>
+		</div>
+		<div class="bottom" on:click={ProductClickEvent}>
+			<div class="details">
+				<h1>{product.nombre}</h1>
+				<p>${product.precio}</p>
 			</div>
-			<div class="bottom" on:click={ProductClickEvent(product)}>
-				<div class="details">
-					<h1>{product.nombre}</h1>
-					<p>${product.precio}</p>
-				</div>
-				<div class="buy">
-					<svg class="svg-reset" viewBox="0 0 20 20">
-						<path
-							fill="current"
-							d="M17.72,5.011H8.026c-0.271,0-0.49,0.219-0.49,0.489c0,0.271,0.219,0.489,0.49,0.489h8.962l-1.979,4.773H6.763L4.935,5.343C4.926,5.316,4.897,5.309,4.884,5.286c-0.011-0.024,0-0.051-0.017-0.074C4.833,5.166,4.025,4.081,2.33,3.908C2.068,3.883,1.822,4.075,1.795,4.344C1.767,4.612,1.962,4.853,2.231,4.88c1.143,0.118,1.703,0.738,1.808,0.866l1.91,5.661c0.066,0.199,0.252,0.333,0.463,0.333h8.924c0.116,0,0.22-0.053,0.308-0.128c0.027-0.023,0.042-0.048,0.063-0.076c0.026-0.034,0.063-0.058,0.08-0.099l2.384-5.75c0.062-0.151,0.046-0.323-0.045-0.458C18.036,5.092,17.883,5.011,17.72,5.011z" />
-						<path
-							fill="current"
-							d="M8.251,12.386c-1.023,0-1.856,0.834-1.856,1.856s0.833,1.853,1.856,1.853c1.021,0,1.853-0.83,1.853-1.853S9.273,12.386,8.251,12.386z M8.251,15.116c-0.484,0-0.877-0.393-0.877-0.874c0-0.484,0.394-0.878,0.877-0.878c0.482,0,0.875,0.394,0.875,0.878C9.126,14.724,8.733,15.116,8.251,15.116z" />
-						<path
-							fill="current"
-							d="M13.972,12.386c-1.022,0-1.855,0.834-1.855,1.856s0.833,1.853,1.855,1.853s1.854-0.83,1.854-1.853S14.994,12.386,13.972,12.386z M13.972,15.116c-0.484,0-0.878-0.393-0.878-0.874c0-0.484,0.394-0.878,0.878-0.878c0.482,0,0.875,0.394,0.875,0.878C14.847,14.724,14.454,15.116,13.972,15.116z" />
-					</svg>
-				</div>
-			</div>
-		</main>
-		<!-- <div class="inside">
-			<div class="icon">
+			<div class="buy">
 				<svg class="svg-reset" viewBox="0 0 20 20">
 					<path
 						fill="current"
+						d="M17.72,5.011H8.026c-0.271,0-0.49,0.219-0.49,0.489c0,0.271,0.219,0.489,0.49,0.489h8.962l-1.979,4.773H6.763L4.935,5.343C4.926,5.316,4.897,5.309,4.884,5.286c-0.011-0.024,0-0.051-0.017-0.074C4.833,5.166,4.025,4.081,2.33,3.908C2.068,3.883,1.822,4.075,1.795,4.344C1.767,4.612,1.962,4.853,2.231,4.88c1.143,0.118,1.703,0.738,1.808,0.866l1.91,5.661c0.066,0.199,0.252,0.333,0.463,0.333h8.924c0.116,0,0.22-0.053,0.308-0.128c0.027-0.023,0.042-0.048,0.063-0.076c0.026-0.034,0.063-0.058,0.08-0.099l2.384-5.75c0.062-0.151,0.046-0.323-0.045-0.458C18.036,5.092,17.883,5.011,17.72,5.011z" />
+					<path
+						fill="current"
+						d="M8.251,12.386c-1.023,0-1.856,0.834-1.856,1.856s0.833,1.853,1.856,1.853c1.021,0,1.853-0.83,1.853-1.853S9.273,12.386,8.251,12.386z M8.251,15.116c-0.484,0-0.877-0.393-0.877-0.874c0-0.484,0.394-0.878,0.877-0.878c0.482,0,0.875,0.394,0.875,0.878C9.126,14.724,8.733,15.116,8.251,15.116z" />
+					<path
+						fill="current"
+						d="M13.972,12.386c-1.022,0-1.855,0.834-1.855,1.856s0.833,1.853,1.855,1.853s1.854-0.83,1.854-1.853S14.994,12.386,13.972,12.386z M13.972,15.116c-0.484,0-0.878-0.393-0.878-0.874c0-0.484,0.394-0.878,0.878-0.878c0.482,0,0.875,0.394,0.875,0.878C14.847,14.724,14.454,15.116,13.972,15.116z" />
+				</svg>
+			</div>
+		</div>
+	</main>
+	<!-- <div class="inside">
+			<div class="icon">
+				<svg class="svg-reset" viewBox="0 0 20 20">
+					<path
+						fill="imgCurrent"
 						d="M10,1.445c-4.726,0-8.555,3.829-8.555,8.555c0,4.725,3.829,8.555,8.555,8.555c4.725,0,8.555-3.83,8.555-8.555C18.555,5.274,14.725,1.445,10,1.445 M10,17.654c-4.221,0-7.654-3.434-7.654-7.654c0-4.221,3.433-7.654,7.654-7.654c4.222,0,7.654,3.433,7.654,7.654C17.654,14.221,14.222,17.654,10,17.654 M14.39,10c0,0.248-0.203,0.45-0.45,0.45H6.06c-0.248,0-0.45-0.203-0.45-0.45s0.203-0.45,0.45-0.45h7.879C14.187,9.55,14.39,9.752,14.39,10 M14.39,12.702c0,0.247-0.203,0.449-0.45,0.449H6.06c-0.248,0-0.45-0.202-0.45-0.449c0-0.248,0.203-0.451,0.45-0.451h7.879C14.187,12.251,14.39,12.454,14.39,12.702 M14.39,7.298c0,0.248-0.203,0.45-0.45,0.45H6.06c-0.248,0-0.45-0.203-0.45-0.45s0.203-0.45,0.45-0.45h7.879C14.187,6.848,14.39,7.051,14.39,7.298" />
 				</svg>
 			</div>
@@ -460,5 +447,5 @@
 				</table>
 			</div>
 		</div> -->
-	</article>
-{/if}
+</article>
+<!-- {/if} -->
