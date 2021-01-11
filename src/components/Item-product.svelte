@@ -192,6 +192,7 @@
 		position: relative;
 		border-radius: 10px;
 		overflow: hidden;
+		padding: 0.5em;
 		/* background: var(--neutral-6); */
 		width: 100%;
 		display: flex;
@@ -206,14 +207,15 @@
 	.list-images-wrapper::-webkit-scrollbar {
 		/* width: 100%; */
 		height: 5px;
-		background-color: white;
+		background-color: rgba(0, 0, 0, 0);
 		/* margin-top: 2em; */
 	}
 	/* Track */
 	.list-images-wrapper::-webkit-scrollbar-track {
 		/* height: 5px; */
-		/* margin: 0.8em; */
+		margin: 0 0.8em;
 		background: #2a221d;
+		border-radius: 10px;
 	}
 	/* Handle */
 	.list-images-wrapper::-webkit-scrollbar-thumb {
@@ -227,11 +229,11 @@
 	.image-wrapper {
 		position: relative;
 		min-width: 60px;
-		height: 80px;
+		height: 60px;
 		min-width: 60px;
 		max-width: 80px;
 		min-height: 60px;
-		margin: 5px 0;
+		/* margin: 5px 0; */
 	}
 
 	.thumblr {
@@ -257,7 +259,7 @@
 		height: 100%;
 		z-index: 1;
 		background-color: var(--primary);
-		transform: translateY(100%);
+		transform: translateY(-100%);
 		transition: all 0.5s ease-in-out;
 	}
 
