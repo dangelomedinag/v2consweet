@@ -28,11 +28,12 @@
 	//? variables
 	const dispatch = createEventDispatcher();
 	const { imgs } = product;
+	let prefetch = false;
 	let length = product.imgs.length - 1;
 	let index = 0;
 	$: current = imgs[index];
 
-	$: console.log(current);
+	// $: console.log(current);
 
 	//? Logic
 
@@ -55,6 +56,41 @@
 
 	function prevImg() {
 		index == 0 ? (index = length) : index--;
+	}
+
+	function longhover(node) {
+		let timer;
+		function removeListener() {
+			node.removeEventListener("mouseover", handleMousedown);
+			node.removeEventListener("mouseout", handleMouseup);
+		}
+
+		const handleMousedown = () => {
+			if (prefetch) {
+				removeListener();
+				return;
+			}
+
+			timer = setTimeout(() => {
+				prefetch = true;
+
+				/* remove listener for card */
+				removeListener();
+			}, 800);
+		};
+
+		const handleMouseup = () => {
+			clearTimeout(timer);
+		};
+
+		node.addEventListener("mouseover", handleMousedown);
+		node.addEventListener("mouseout", handleMouseup);
+
+		return {
+			destroy() {
+				removeListener();
+			},
+		};
 	}
 </script>
 
@@ -122,6 +158,7 @@
 		border-radius: 10px 10px 10px 10px;
 		transform: scale(0.95);
 		transition: transform 0.5s;
+		cursor: pointer;
 	}
 	.wrapper:hover {
 		transform: scale(1);
@@ -129,7 +166,6 @@
 	.wrapper .container-card {
 		width: 100%;
 		height: 100%;
-		cursor: pointer;
 	}
 	.wrapper .container-card .top {
 		height: 80%;
@@ -148,19 +184,9 @@
 	.wrapper .container-card .top button {
 		position: absolute;
 		top: 0;
-		opacity: 0;
 		height: 100%;
 		background-color: var(--primary-opacity-2);
 		outline: 0;
-		/* display: inline-flex;
-		justify-content: center;
-		align-items: center;
-		margin: auto 0;
-		color: white;
-		padding: 0 0.5em;
-		font-size: 1em;
-		cursor: pointer;
-		transition: opacity 0.4s ease-in-out, background 0.2s ease-in; */
 	}
 
 	.b-left {
@@ -168,6 +194,10 @@
 	}
 	.b-right {
 		left: 0;
+	}
+	.b-left,
+	.b-right {
+		cursor: inherit;
 	}
 
 	.wrapper .container-card .top button:hover {
@@ -177,12 +207,13 @@
 	.wrapper .container-card .top:hover button {
 		opacity: 1;
 	}
-	.wrapper .container-card .top:hover button svg {
-		width: 20px;
-		height: auto;
+
+	.wrapper .container-card .top button svg {
+		opacity: 0.5;
 	}
-	.wrapper .container-card .top:hover button svg path {
-		fill: white;
+
+	.wrapper .container-card .top:hover button svg {
+		opacity: 1;
 	}
 
 	.wrapper .container-card .bottom {
@@ -354,27 +385,30 @@
 <article class="wrapper card-observer" in:fly={in_fly} out:fly={out_fly}>
 	<main class="container-card">
 		<div class="top">
-			<img
-				on:click={ProductClickEvent}
-				class="image-card"
-				src={resizingImg(current)}
-				alt="dsdad" />
-			<!-- {#each imgs as img (img)}
+			{#if prefetch}
+				{#each imgs as img (img)}
 					<img
 						on:click={ProductClickEvent}
 						class="image-card"
 						src={resizingImg(img)}
 						style="display: {imgs.indexOf(img) == index ? 'block' : 'none'}"
 						alt="dsdad" />
-				{/each} -->
-			<button on:click={prevImg} class="b-right"><svg
+				{/each}
+			{:else}
+				<img
+					on:click={ProductClickEvent}
+					class="image-card"
+					src={resizingImg(current)}
+					alt="dsdad" />
+			{/if}
+			<button use:longhover on:click={prevImg} class="b-right"><svg
 					class="svg-reset"
 					viewBox="0 0 20 20">
 					<path
 						fill="current"
 						d="M8.388,10.049l4.76-4.873c0.303-0.31,0.297-0.804-0.012-1.105c-0.309-0.304-0.803-0.293-1.105,0.012L6.726,9.516c-0.303,0.31-0.296,0.805,0.012,1.105l5.433,5.307c0.152,0.148,0.35,0.223,0.547,0.223c0.203,0,0.406-0.08,0.559-0.236c0.303-0.309,0.295-0.803-0.012-1.104L8.388,10.049z" />
 				</svg></button>
-			<button on:click={nextImg} class="b-left"><svg
+			<button use:longhover on:click={nextImg} class="b-left"><svg
 					class="svg-reset"
 					viewBox="0 0 20 20">
 					<path

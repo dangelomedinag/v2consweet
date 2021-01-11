@@ -152,6 +152,7 @@
 	@media (min-width: 768px) {
 		.main {
 			width: auto;
+			margin-right: 0.5em;
 		}
 	}
 
