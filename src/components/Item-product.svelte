@@ -77,6 +77,21 @@
 		text-transform: uppercase;
 	}
 
+	.wrapper-price {
+		background-color: var(--secondary);
+		border: 0;
+		border-radius: 50px;
+		box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
+		padding: 1em;
+		max-width: 150px;
+		/* min-width: 100%; */
+	}
+	.price {
+		display: block;
+		max-width: 100%;
+		text-align: center;
+	}
+
 	.course .course-preview h6 {
 	}
 
@@ -141,7 +156,7 @@
 		letter-spacing: 1px;
 	}
 
-	.btn {
+	/* .btn {
 		background-color: var(--secondary);
 		border: 0;
 		border-radius: 50px;
@@ -150,7 +165,7 @@
 		font-size: 16px;
 		padding: 12px 25px;
 		letter-spacing: 1px;
-	}
+	} */
 
 	.divider {
 		/* --color-opacity: 0.2; */
@@ -164,23 +179,20 @@
 	@media (min-width: 1280px) {
 	}
 	.section-wrapper {
-		/* margin: 1.5em; */
 		padding: 1.5em;
-		/* max-width: 400px; */
-		/* max-height: 400px; */
 		margin: 1em auto;
 	}
 	.layout {
 		display: flex;
-		flex-direction: row;
+		flex-direction: column;
 		flex-wrap: wrap;
-		justify-content: space-evenly;
-		align-items: flex-start;
+		justify-content: center;
+		align-items: center;
 		width: 100%;
 	}
 	.col {
 		width: 100%;
-		max-width: 100%;
+		max-width: 500px;
 	}
 
 	.contact-methods-wrapper {
@@ -297,6 +309,10 @@
 			width: 60%;
 		}
 
+		.layout {
+			flex-direction: row;
+			align-items: flex-start;
+		}
 		.col {
 			max-width: 600px;
 		}
@@ -308,7 +324,9 @@
 		<div class="course-preview">
 			<h6>{product.tipo}</h6>
 			<h2 class="title">{product.nombre}</h2>
-			<span class="btn">precio: ${product.precio}</span>
+			<div class="wrapper-price">
+				<span class="price">precio: ${product.precio}</span>
+			</div>
 		</div>
 		<div class="course-info">
 			<h6>Descripcion de producto</h6>
