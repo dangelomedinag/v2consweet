@@ -1,13 +1,13 @@
 <script>
 	import { onMount } from "svelte";
-
 	import { quintInOut, quintOut } from "svelte/easing";
 	import { scale, draw } from "svelte/transition";
+	import SpinLoader from "./Spin-loader.svelte";
 </script>
 
 <style>
 	/* animations */
-	@keyframes load {
+	@keyframes load-overlay {
 		from {
 			transform: translate(-100%);
 		}
@@ -17,12 +17,12 @@
 	}
 
 	/* loading card */
-	.loading-animated {
+	.load-overlay {
 		position: relative;
 		overflow: hidden;
 	}
 
-	.loading-animated::before {
+	.load-overlay::before {
 		content: "";
 		display: block;
 		position: absolute;
@@ -37,7 +37,7 @@
 			transparent 100%
 		);
 		/* transform: translate(-150%); */
-		animation: load 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+		animation: load-overlay 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 	}
 
 	/* card */
@@ -57,6 +57,7 @@
 		border-radius: 10px 10px 10px 10px;
 		transform: scale(0.95);
 	}
+
 	.top,
 	.bottom {
 		display: flex;
@@ -70,7 +71,6 @@
 		height: 100%;
 	}
 	.bottom {
-		/* background-color: var(--neutral-opacity-1); */
 		height: 20%;
 	}
 
@@ -80,73 +80,13 @@
 			height: 300px;
 		}
 	}
-	.lds-ellipsis {
-		display: inline-block;
-		position: relative;
-		width: 80px;
-		height: 80px;
-	}
-	.lds-ellipsis div {
-		position: absolute;
-		top: 33px;
-		width: 9px;
-		height: 9px;
-		border-radius: 50%;
-		background: var(--primary);
-		animation-timing-function: cubic-bezier(0, 1, 1, 0);
-	}
-	.lds-ellipsis div:nth-child(1) {
-		left: 8px;
-		animation: lds-ellipsis1 0.6s infinite;
-	}
-	.lds-ellipsis div:nth-child(2) {
-		left: 8px;
-		animation: lds-ellipsis2 0.6s infinite;
-	}
-	.lds-ellipsis div:nth-child(3) {
-		left: 32px;
-		animation: lds-ellipsis2 0.6s infinite;
-	}
-	.lds-ellipsis div:nth-child(4) {
-		left: 56px;
-		animation: lds-ellipsis3 0.6s infinite;
-	}
-	@keyframes lds-ellipsis1 {
-		0% {
-			transform: scale(0);
-		}
-		100% {
-			transform: scale(1);
-		}
-	}
-	@keyframes lds-ellipsis3 {
-		0% {
-			transform: scale(1);
-		}
-		100% {
-			transform: scale(0);
-		}
-	}
-	@keyframes lds-ellipsis2 {
-		0% {
-			transform: translate(0, 0);
-		}
-		100% {
-			transform: translate(24px, 0);
-		}
-	}
 </style>
 
 <article
 	transition:scale={{ duration: 800, easing: quintInOut, start: 0.8 }}
-	class="wrapper loading-animated">
+	class="wrapper load-overlay">
 	<div class="top">
-		<div class="lds-ellipsis">
-			<div />
-			<div />
-			<div />
-			<div />
-		</div>
+		<SpinLoader />
 	</div>
 	<div class="bottom">
 		<div>cargando...</div>
