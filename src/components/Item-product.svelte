@@ -287,12 +287,11 @@
 		.course {
 			flex-direction: row;
 		}
-		/* .col {
-			max-width: calc(50% - 1em);
-		} */
+
 		.col:nth-child(1) {
 			margin-right: 0.5em;
 		}
+		
 		.col:nth-child(2) {
 			margin-left: 0.5em;
 		}

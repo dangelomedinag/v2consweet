@@ -143,10 +143,11 @@ textarea {
 	}
 } */
 
-.svg-reset {
+svg {
 	width: 1em;
 	height: 1em;
 	fill: #d8d8d8;
+	/* fill: "current"; */
 }
 
 .hideCard {
