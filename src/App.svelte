@@ -137,11 +137,20 @@
 			left: 0,
 			behavior: "smooth",
 		});
+		window.addEventListener("keydown", handleKeydown);
 	}
 
 	function tagsHandler(id, name) {
 		products = products.filter((p) => p.categoria_id === id);
 		level2(null, `Productos (${name})`);
+	}
+
+	function handleKeydown(e) {
+		// console.log(e);
+		if (levels.length > 2 && (e.key === "Backspace" || e.which == 8)) {
+			level1();
+			window.removeEventListener("keydown", handleKeydown);
+		}
 	}
 </script>
 
@@ -303,6 +312,8 @@
 	}
 </style>
 
+<!-- <svelte:window on:keydown={handleKeydown} /> -->
+
 <div class="container">
 	<header>
 		<img src="consweet-logo-web.svg" alt="icon-logo" on:click={level1} />
@@ -316,27 +327,23 @@
 				<button
 					class="button-action prev"
 					on:click={prevProduct}
-					disabled={products.length == 1 ||
-						(products.indexOf(product) == 0 && products.length == 2)}
-					><svg class="svg-reset" viewBox="0 0 20 20">
+					disabled={products.length == 1 || (products.indexOf(product) == 0 && products.length == 2)}><svg
+						class="svg-reset"
+						viewBox="0 0 20 20">
 						<path
 							fill="current"
-							d="M8.388,10.049l4.76-4.873c0.303-0.31,0.297-0.804-0.012-1.105c-0.309-0.304-0.803-0.293-1.105,0.012L6.726,9.516c-0.303,0.31-0.296,0.805,0.012,1.105l5.433,5.307c0.152,0.148,0.35,0.223,0.547,0.223c0.203,0,0.406-0.08,0.559-0.236c0.303-0.309,0.295-0.803-0.012-1.104L8.388,10.049z"
-						/>
-					</svg></button
-				>
+							d="M8.388,10.049l4.76-4.873c0.303-0.31,0.297-0.804-0.012-1.105c-0.309-0.304-0.803-0.293-1.105,0.012L6.726,9.516c-0.303,0.31-0.296,0.805,0.012,1.105l5.433,5.307c0.152,0.148,0.35,0.223,0.547,0.223c0.203,0,0.406-0.08,0.559-0.236c0.303-0.309,0.295-0.803-0.012-1.104L8.388,10.049z" />
+					</svg></button>
 				<button
 					class="button-action next"
 					on:click={nextProduct}
-					disabled={products.length == 1 ||
-						(products.indexOf(product) == 1 && products.length == 2)}
-					><svg class="svg-reset" viewBox="0 0 20 20">
+					disabled={products.length == 1 || (products.indexOf(product) == 1 && products.length == 2)}><svg
+						class="svg-reset"
+						viewBox="0 0 20 20">
 						<path
 							fill="current"
-							d="M11.611,10.049l-4.76-4.873c-0.303-0.31-0.297-0.804,0.012-1.105c0.309-0.304,0.803-0.293,1.105,0.012l5.306,5.433c0.304,0.31,0.296,0.805-0.012,1.105L7.83,15.928c-0.152,0.148-0.35,0.223-0.547,0.223c-0.203,0-0.406-0.08-0.559-0.236c-0.303-0.309-0.295-0.803,0.012-1.104L11.611,10.049z"
-						/>
-					</svg></button
-				>
+							d="M11.611,10.049l-4.76-4.873c-0.303-0.31-0.297-0.804,0.012-1.105c0.309-0.304,0.803-0.293,1.105,0.012l5.306,5.433c0.304,0.31,0.296,0.805-0.012,1.105L7.83,15.928c-0.152,0.148-0.35,0.223-0.547,0.223c-0.203,0-0.406-0.08-0.559-0.236c-0.303-0.309-0.295-0.803,0.012-1.104L11.611,10.049z" />
+					</svg></button>
 			</div>
 		{/if}
 		{#if levels.length <= 1}
@@ -385,8 +392,7 @@
 										out_fly={{ delay: 0, duration: 0, opacity: 1, y: 0, x: 0 }}
 										in_fly={{ delay: 0, duration: 0, opacity: 1, y: 0, x: 0 }}
 										product={item}
-										on:clickCard={level3}
-									/>
+										on:clickCard={level3} />
 								</div>
 							{/each}
 						{/if}
@@ -399,8 +405,7 @@
 							{product}
 							transition={app.animations.tracked[0][1].transition}
 							intro={app.animations.tracked[0][1].intro}
-							outro={app.animations.tracked[0][1].outro}
-						>
+							outro={app.animations.tracked[0][1].outro}>
 							<ContactMethods />
 						</ItemProduct>
 					{/key}
