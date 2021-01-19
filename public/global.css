@@ -153,3 +153,14 @@ svg {
 .hideCard {
 	display: none !important;
 }
+
+.stop-scrolling {
+	height: 100%;
+	overflow: hidden;
+}
+
+@media (min-width: 786px) {
+	.stop-scrolling {
+		overflow: initial;
+	}
+}
