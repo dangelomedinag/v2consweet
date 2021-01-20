@@ -22,21 +22,27 @@
 		}
 	}
 	.header {
-		z-index: 99999999;
+		position: -webkit-sticky;
+		position: sticky;
+		z-index: 9999999999;
+		top: 0;
+		/* width: 100%; */
 		width: 100%;
-		height: auto;
+		/* height: 100%; */
+		/* height: auto; */
+		background-color: var(--primary-opacity-6);
 		/* background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8) 80%); */
-		background-repeat: no-repeat, no-repeat;
-		background-size: contain;
-		background-position: center, center;
+		/* background-repeat: no-repeat, no-repeat; */
+		/* background-size: contain; */
+		/* background-position: center, center; */
 		/* transition: all 0.6s; */
 	}
 	.full-screen {
 		background-color: var(--secondary-opacity-9);
 		/* background: linear-gradient(var, rgba(0, 0, 0, 0.8) 80%); */
-		height: 100vh;
-		position: fixed;
-		width: 100%;
+		/* height: 100vh; */
+		/* position: fixed; */
+		/* width: 100%; */
 	}
 	.container {
 		padding: 1.5em;
@@ -125,8 +131,7 @@
 		background-color: rgba(224, 255, 255, 0.1);
 		/* margin-top: 2em; */
 	}
-	.hide-menu {
-	}
+
 	.show-menu {
 		display: initial;
 		transform: translateY(0%);
@@ -206,7 +211,7 @@
 		</button>
 		<div class="menu" class:show-menu={isOpen}>
 			<a
-				href="#productos"
+				href="#section-products"
 				on:click={() => {
 					isOpen = !isOpen;
 					scrollLock();
