@@ -74,10 +74,10 @@
 
 	onMount(async () => {
 		const promise = await fetch(
-			"https://sapper-heroku-test.herokuapp.com/api/productos.json"
+			"https://svelte-config.vercel.app/api/products"
 		);
 		const promiseCategories = await fetch(
-			"https://sapper-heroku-test.herokuapp.com/api/categorias.json"
+			"https://svelte-config.vercel.app/api/categories"
 		);
 		// setTimeout(async () => {
 		raw_products = await promise.json();
@@ -313,14 +313,13 @@
 	}
 </style>
 
-<!-- <div class="container">
-	<header>
-		<img src="consweet-logo-web.svg" alt="icon-logo" on:click={level1} />
-	</header>
-</div> -->
-
-<NavbarMain on:click={level1} />
+<!-- <NavbarMain on:click={level1} /> -->
 <div class="container-full main">
+	<div class="container">
+		<header>
+			<img src="consweet-logo-web.svg" alt="icon-logo" on:click={level1} />
+		</header>
+	</div>
 	<div class="container">
 		{#if levels.length == 3}
 			<div class="wrapper-buttons-action">
