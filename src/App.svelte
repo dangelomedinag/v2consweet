@@ -73,11 +73,9 @@
 	// console.log($$props);
 
 	onMount(async () => {
-		const promise = await fetch(
-			"https://svelte-config.vercel.app/api/products"
-		);
+		const promise = await fetch("https://api-consweet.vercel.app/api/products");
 		const promiseCategories = await fetch(
-			"https://svelte-config.vercel.app/api/categories"
+			"https://api-consweet.vercel.app/api/categories"
 		);
 		// setTimeout(async () => {
 		raw_products = await promise.json();
