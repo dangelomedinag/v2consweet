@@ -1,8 +1,9 @@
 <script>
 	//? imports system
 	import { onMount } from "svelte";
-	import { quintIn, quintOut } from "svelte/easing";
-	import { fly } from "svelte/transition";
+	import { quintIn, quintOut, quintInOut } from "svelte/easing";
+	import { fly, scale, fade } from "svelte/transition";
+	import { flip } from "svelte/animate";
 
 	//? imports components, store and function
 	import Section from "./components/Section.svelte";
@@ -17,6 +18,7 @@
 	import SectionButton from "./components/Section-button.svelte";
 	import CardProductSkeleton from "./components/Card-product-skeleton.svelte";
 	import NavbarMain from "./components/Navbar-main.svelte";
+	import ProductsSortTool from "./components/Products-sort-tool.svelte";
 
 	//? props
 
@@ -62,6 +64,7 @@
 	let products;
 	let categories;
 	let product;
+	let sort, filter;
 
 	$: empty =
 		products == undefined && categories == undefined && product == undefined;
@@ -569,9 +572,30 @@
 			<Breadcrumb {levels} on:level1={level1} on:level2={level2} />
 			{#if levels.length == 2}
 				<SubSection>
+					<ProductsSortTool {categories} bind:sort bind:filter />
 					<div class="grid-products">
 						{#if !empty}
-							{#each products as item (item.id)}
+							{#each products
+								.filter((item) =>
+									filter === "todos"
+										? item.nombre
+										: item.categoria_id === filter
+								)
+								.sort(function (a, b) {
+									if (sort === "mayor") {
+										if (a.precio < b.precio) {
+											return 1;
+										} else {
+											return -1;
+										}
+									} else {
+										if (a.precio > b.precio) {
+											return 1;
+										} else {
+											return -1;
+										}
+									}
+								}) as item (item.id)}
 								<div style="padding: 1em;">
 									<CardProduct
 										out_fly={{ delay: 0, duration: 0, opacity: 1, y: 0, x: 0 }}
