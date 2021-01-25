@@ -15,10 +15,17 @@
 		color: var(--primary);
 		background-color: var(--primary-opacity-1);
 		border-radius: 5px;
+		cursor: pointer;
+		margin: 0 0.5em;
 		/* border: 1px solid var(--primary); */
 	}
 	.select__item:hover {
 		background-color: var(--primary-opacity-2);
+	}
+	.select__item:focus {
+		outline: 1px dashed var(--primary-opacity-3);
+		outline-offset: -3px;
+		box-shadow: 0px 0px 30px 3px rgba(0, 0, 0, 0.1);
 	}
 </style>
 
